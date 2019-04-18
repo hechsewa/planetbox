@@ -7,6 +7,7 @@ haha april fools I suck at this :)
 """
 #pip install thorpy, pygame
 import thorpy, pygame
+from src import Planet
 
 #define some colors
 WHITE = (255,255,255)
@@ -59,29 +60,109 @@ pygame.display.update()
 #logo
 logo = pygame.image.load('../imgs/logo300.png')
 
+#global planet variables
+prad=0
+pmass=0
+pname=""
+ptype=""
+planets = [] #list of all added planets
+
+#Reading inputs functions
+#TODO: check conditions for inserted values, eg. if is bigger than 0 if mass is proportional to radius etc
+
+def read_inserter_func(event):#Reactions functions must take an event as first arg
+    global prad, pmass, pname
+    if(event.el == p_rad):
+        prad = event.el.get_value()
+        prad = int(prad)
+        print(prad)
+    elif(event.el == p_mass):
+        pmass = event.el.get_value()
+        pmass = int(pmass)
+        print(pmass)
+    elif(event.el == p_name):
+        pname = event.el.get_value();
+        print(pname)
+    elif(event.el== p_kind):
+        ptype = event.el.get_value();
+        print(ptype)
+
+#pressing add planet btn reaction
+def readPlanet():
+    global prad, pmass, pname, ptype, planets
+
+    #clean the inserters
+    p_rad.set_value("");
+    p_rad.unblit_and_reblit();
+    p_mass.set_value("");
+    p_mass.unblit_and_reblit();
+    p_name.set_value("");
+    p_name.unblit_and_reblit();
+
+    ptype = p_kind.get_selected().get_text();
+    print(ptype)
+
+    #create a new planet
+    planet = Planet.Planet(prad, pmass, ptype, pname)
+    planets.append(planet);
+
+def startSimulation():
+    print("Starting simulation...")
+    print(planets)
+
 #add button: adds planet to a list and updates prev
-addBtn = thorpy.make_button("Add planet") #param2: func=...
+addBtn = thorpy.make_button("Add planet", func=readPlanet)
+addBtn.set_size((100, 20))
 addBtn.set_main_color(RICHBLUE)
 addBtn.set_font_color(WHITE)
-#addBtn.set_size((100,20))
 
 #new window: starts simulation
-startBtn = thorpy.make_button("Start simulation")
+startBtn = thorpy.make_button("Start simulation", func=startSimulation)
+startBtn.set_size((100, 20))
 startBtn.set_main_color(RICHBLUE)
 startBtn.set_font_color(WHITE)
-#startBtn.set_size((100,20))
+
+#update preview: adds newly added planets to the preview and rearranges the orbits
+prevBtn = thorpy.make_button("Update preview") #func = ...
+prevBtn.set_size((100, 20))
+prevBtn.set_main_color(RICHBLUE)
+prevBtn.set_font_color(WHITE)
+
 
 
 #entries
+#radius input
 p_rad_txt = thorpy.OneLineText(text="Radius of the planet(km2):")
-p_rad = thorpy.Inserter(name="", value="", size=(100,20))
+p_rad = thorpy.Inserter(name="", value="", size=(100, 20))
 
+radReact = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
+                              reac_func=read_inserter_func,
+                              event_args={"id":thorpy.constants.EVENT_INSERT,
+                                          "el":p_rad});
+
+p_rad.add_reaction(radReact)
+
+#name input
 p_name_txt = thorpy.OneLineText(text="Name of the planet: ")
-p_name = thorpy.Inserter(name="", value="", size=(100,20))
+p_name = thorpy.Inserter(name="", value="", size=(100, 20))
+nameReact = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
+                              reac_func=read_inserter_func,
+                              event_args={"id":thorpy.constants.EVENT_INSERT,
+                                          "el":p_name});
 
+p_name.add_reaction(nameReact)
+
+#mass input
 p_mass_txt = thorpy.OneLineText(text="Mass of the planet (10^26 kg):")
-p_mass = thorpy.Inserter(name="", value="", size=(100,20))
+p_mass = thorpy.Inserter(name="", value="", size=(100, 20))
+massReact = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
+                              reac_func=read_inserter_func,
+                              event_args={"id":thorpy.constants.EVENT_INSERT,
+                                          "el":p_mass});
 
+p_mass.add_reaction(massReact)
+
+#type of planet input
 radio_txt = thorpy.make_text("Type of the planet: ")
 radios = [thorpy.Checker("gas", type_="radio"),
           thorpy.Checker("ice", type_="radio"),
@@ -89,28 +170,33 @@ radios = [thorpy.Checker("gas", type_="radio"),
 p_kind = thorpy.RadioPool(radios, first_value=radios[1], always_value=True)
 
 
+#title above the preview
 prev_txt = thorpy.make_text("Preview of the planetary system: ", 24, WHITE)
 prev_txt.set_font("Ubuntu.ttf")
-prev_txt.set_topleft((420,200))
+prev_txt.set_topleft((420, 200))
 
 #blit thingies
 entries = [p_rad_txt, p_rad, p_mass_txt, p_mass, p_name_txt, p_name]
 txts = [radio_txt]
-buttons = [addBtn, startBtn]
-boxBtn = thorpy.Box.make(elements=entries+txts+radios+buttons)
+buttons = [addBtn, prevBtn, startBtn]
+elements = entries+txts+radios+buttons
+boxBtn = thorpy.Box.make(elements=elements)
 boxBtn.set_main_color(WHITE)
 boxBtn.set_size((260,500))
-menu = thorpy.Menu(elements=[prev_txt,boxBtn])
+
+thorpy.store(boxBtn, elements, align="center")
+
+menu = thorpy.Menu(elements=[prev_txt, boxBtn])
 
 for element in menu.get_population():
     element.surface = DISPLAY
-    
-boxBtn.set_topleft((40,50))
+
+boxBtn.set_topleft((40, 50))
 boxBtn.blit()
 boxBtn.update()
 prev_txt.blit()
 prev_txt.update()
-DISPLAY.blit(logo,(390,20))
+DISPLAY.blit(logo, (390, 20))
 pygame.display.flip()
 
 while True:
@@ -119,6 +205,6 @@ while True:
             pygame.quit()
             quit()
         menu.react(event)
-                              
+
 
 
