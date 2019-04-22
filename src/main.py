@@ -11,6 +11,8 @@ from src import Planet
 from src import AlertBox
 
 #define some colors
+from src.Simulation import Simulation
+
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RICHBLUE = (2, 1, 34)
@@ -30,7 +32,8 @@ prad=0
 pmass=0
 pname=""
 ptype=""
-planets = [] #list of all added planets
+
+simulation = Simulation()
 
 #background handling
 class Background(pygame.sprite.Sprite):
@@ -114,7 +117,7 @@ def apploop():
 
     # pressing add planet btn reaction
     def readPlanet():
-        global prad, pmass, pname, ptype, planets
+        global prad, pmass, pname, ptype, simulation
         ptype = p_kind.get_selected().get_text()
         val = density_check(ptype, pmass, prad)
         if val == 0 or val == 1:
@@ -130,12 +133,11 @@ def apploop():
             p_name.set_value("")
             p_name.unblit_and_reblit()
             planet = Planet.Planet(prad, pmass, ptype, pname)
-            planets.append(planet)
-
+            simulation.AddPlanet(planet)
 
     def startSimulation():
         print("Starting simulation...")
-        print(planets)
+        print(simulation.PrintPlanets())
 
 
     # add button: adds planet to a list and updates prev
