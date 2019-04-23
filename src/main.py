@@ -27,9 +27,11 @@ display_height = 600
 ico = pygame.image.load('../imgs/favicon.ico')
 pygame.init()
 DISPLAY = pygame.display.set_mode((display_width, display_height))
+
 #global planet variables
 prad=0
 pmass=0
+pdist=0 # distance to the sun
 pname=""
 ptype=""
 
@@ -94,30 +96,32 @@ def apploop():
                 return 2
 
     #Reading inputs functions
-    #TODO: check conditions for inserted values, eg. if is bigger than 0 if mass is proportional to radius etc
-
 
     def read_inserter_func(event):#Reactions functions must take an event as first arg
-        global prad, pmass, pname
+        global prad, pmass, pname, pdist
         if(event.el == p_rad):
             prad = event.el.get_value()
             prad = int(prad)
-            print(prad)
+            #print(prad)
+        elif(event.el== pdist):
+            pdist = event.el.get_value()
+            pdist = int(pdist)
+            #print(pdist)
         elif(event.el == p_mass):
             pmass = event.el.get_value()
             pmass = int(pmass)
-            print(pmass)
+            #print(pmass)
         elif(event.el == p_name):
             pname = event.el.get_value()
-            print(pname)
+            #print(pname)
         elif(event.el== p_kind):
             ptype = event.el.get_value()
-            print(ptype)
+            #print(ptype)
 
 
     # pressing add planet btn reaction
     def readPlanet():
-        global prad, pmass, pname, ptype, simulation
+        global prad, pmass, pname, ptype, simulation, pdist
         ptype = p_kind.get_selected().get_text()
         val = density_check(ptype, pmass, prad)
         if val == 0 or val == 1:
@@ -128,11 +132,17 @@ def apploop():
             # clean the inserters
             p_rad.set_value("")
             p_rad.unblit_and_reblit()
+
+            p_dist.set_value("")
+            p_dist.unblit_and_reblit()
+
             p_mass.set_value("")
             p_mass.unblit_and_reblit()
+
             p_name.set_value("")
             p_name.unblit_and_reblit()
-            planet = Planet.Planet(prad, pmass, ptype, pname)
+
+            planet = Planet.Planet(prad, pmass, ptype, pdist, pname)
             simulation.AddPlanet(planet)
 
     def startSimulation():
@@ -169,6 +179,17 @@ def apploop():
 
     p_rad.add_reaction(radReact)
 
+    # distance to the sun input
+    p_dist_txt = thorpy.OneLineText(text="Distance to the sun (10^4 km):")
+    p_dist = thorpy.Inserter(name="", value="", size=(100, 20))
+
+    distReact = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
+                                reac_func=read_inserter_func,
+                                event_args={"id": thorpy.constants.EVENT_INSERT,
+                                           "el": p_dist})
+
+    p_dist.add_reaction(distReact)
+
     # name input
     p_name_txt = thorpy.OneLineText(text="Name of the planet: ")
     p_name = thorpy.Inserter(name="", value="", size=(100, 20))
@@ -203,7 +224,7 @@ def apploop():
     prev_txt.set_topleft((420, 200))
 
     # blit thingies
-    entries = [p_rad_txt, p_rad, p_mass_txt, p_mass, p_name_txt, p_name]
+    entries = [p_rad_txt, p_rad, p_mass_txt, p_mass, p_dist_txt, p_dist, p_name_txt, p_name]
     txts = [radio_txt]
     buttons = [addBtn, prevBtn, startBtn]
     elements = entries+txts+radios+buttons

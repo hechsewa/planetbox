@@ -3,10 +3,11 @@ import random, math
 
 class Planet:
 
-    def __init__(self, radius, mass, type, name):
+    def __init__(self, radius, mass, type, distance, name):
         self.radius = radius
         self.mass = mass
         self.type = type
+        self.distance = distance
         self.name = name
         self.gravity = 6.674 * self.mass # / pow(self.radius, 2)  #TODO:  G*m / R^2 WRONG!!!!
         # TODO: its not self.radius, its the freaking distance which i dont know how to calcualte without parallax
