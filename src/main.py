@@ -72,25 +72,36 @@ def apploop():
     #logo
     logo = pygame.image.load('../imgs/logo300.png')
 
+    def RadiusCheck(radius, type):
+        if (type == "terrestrial"):
+            if (radius < 300):
+                return 0
+            else:
+                return 1
+        elif (type == "ice" or type == "gas"): #TODO error message for that
+            if (radius < 200):
+                return 0
+            else:
+                return 1
     # checks if the density is ok
     def density_check(ptype, pmass, prad):
         # pmass: 10^22 kg, prad: km
         rad = prad*100000  # radius in cm
         vol = (4/3)*math.pi*rad*rad*rad  # cm3
-        mass = pmass * 10 ^ 25  # g
+        mass = pmass * pow(10,25)  # g
         g = mass/vol  # g/cm3
 
-        if ptype == "terrestial":
-            if (g<3.8):
+        if ptype == "terrestrial":
+            if (g < 3.6): # not sure about this one
                 return 0
-            elif (g>5.5):
+            elif (g > 28):
                 return 1
             else:
                 return 2
         elif ptype == "gas" or ptype == "ice":
-            if (g<0.2):
+            if (g < 0.2): # not sure about this one
                 return 0
-            elif (g>2.0):
+            elif (g > 17):
                 return 1
             else:
                 return 2
@@ -103,9 +114,9 @@ def apploop():
             prad = event.el.get_value()
             prad = int(prad)
             #print(prad)
-        elif(event.el== pdist):
+        elif(event.el== p_dist):
             pdist = event.el.get_value()
-            pdist = int(pdist)
+            pdist = float(pdist)
             #print(pdist)
         elif(event.el == p_mass):
             pmass = event.el.get_value()
@@ -145,7 +156,9 @@ def apploop():
             planet = Planet.Planet(prad, pmass, ptype, pdist, pname)
             simulation.AddPlanet(planet)
 
+
     def startSimulation():
+        simulation.CreateMoons()
         print("Starting simulation...")
         print(simulation.PrintPlanets())
 
@@ -180,7 +193,7 @@ def apploop():
     p_rad.add_reaction(radReact)
 
     # distance to the sun input
-    p_dist_txt = thorpy.OneLineText(text="Distance to the sun (10^4 km):")
+    p_dist_txt = thorpy.OneLineText(text="Distance to the sun (AU):")
     p_dist = thorpy.Inserter(name="", value="", size=(100, 20))
 
     distReact = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
@@ -214,7 +227,7 @@ def apploop():
     radio_txt = thorpy.make_text("Type of the planet: ")
     radios = [thorpy.Checker("gas", type_="radio"),
               thorpy.Checker("ice", type_="radio"),
-              thorpy.Checker("therestial", type_="radio")]
+              thorpy.Checker("terrestrial", type_="radio")]
     p_kind = thorpy.RadioPool(radios, first_value=radios[1], always_value=True)
 
 
