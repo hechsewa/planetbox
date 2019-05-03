@@ -14,25 +14,23 @@ display_height = 600
 ico = pygame.image.load('../imgs/favicon.ico')
 pygame.init()
 
-#new simulation
-simulation = Simulation.Simulation()
 
 #open seprate window for simulation, init pygame
-def create():
+def create(simulation):
     global sim
     pygame.display.set_caption('Planetbox')
     pygame.display.set_icon(ico)
     DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
     DISPLAY.fill(RICHBLUE)
 
-    #testing data
-    tester = Planet.Planet(6371, 597, "terrestrial", 1, "earth")
-    merc = Planet.Planet(2440, 33, "gas", 0.39, "merc")
-    gwen = Planet.Planet(7440, 600, "ice", 2, "gwen")
+    #
+    #tester = Planet.Planet(6371, 597, "terrestrial", 1, "earth")
+    #merc = Planet.Planet(2440, 33, "gas", 0.39, "merc")
+    #gwen = Planet.Planet(7440, 600, "ice", 2, "gwen")
 
-    simulation.AddPlanet(tester)
-    simulation.AddPlanet(merc)
-    simulation.AddPlanet(gwen)
+    #simulation.AddPlanet(tester)
+    #simulation.AddPlanet(merc)
+    #simulation.AddPlanet(gwen)
 
     DISPLAY.fill(RICHBLUE)
     simulation.animatePlanets(DISPLAY, display_width, display_height, -15)
