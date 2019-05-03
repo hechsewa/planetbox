@@ -1,50 +1,66 @@
 from src.Planet import *
 from src.Moon import *
 
+#global var for controlling the simulation
+sim = True
+
 class Simulation:
 
     def __init__(self):
         self.Planets = []
 
-    def drawPlanets(self, screen, w, h):
-        star_pos_x = int(w / 2)
-        star_pos_y = int(h / 2)
+
+    #draws static planets (for preview)
+    def drawPlanets(self, screen, w, h, xs, ys):
+        #x, y point to where in starts, usually (0,0) but preview :<
+        star_pos_x = xs + int(w / 2)
+        star_pos_y = ys + int(h / 2)
         # display main star
         pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], 15)
         for p in self.Planets:
             dist = int(p.distance * (h / 3))
             x = int(math.cos(0 * 2 * math.pi / 360)*dist) + star_pos_x
             y = int(math.sin(0 * 2 * math.pi / 360) * dist) + star_pos_y
-            p.drawOrbit(screen, star_pos_x, star_pos_y)
             p.drawPlanet(screen, x, y)
             pygame.display.update()
 
 
-    def animatePlanets(self, screen, w, h):
-        # w, h = pygame.display.get_surface().get_size()
+    #animates the planets
+    def animatePlanets(self, screen, w, h, degree):
+        global sim
         star_pos_x = int(w / 2)
         star_pos_y = int(h / 2)
-
         clock = pygame.time.Clock()
 
-        for degree in range(0, 360, 10):
-            # display main star
+        sim = True
+        while sim:
+            #closes the simulation
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.VIDEORESIZE:
+                    screen = pygame.display.set_mode(event.dict['size'],
+                                                     pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
+                    screen.fill(RICHBLUE)
+                    sim = False
+                    self.animatePlanets(screen, event.dict['w'], event.dict['h'], degree)
+
+            screen.fill(RICHBLUE)
+            degree += 10
+            if degree == 360:
+                degree = 0
             pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], 15)
             for p in self.Planets:
                 dist = int(p.distance * (h / 3))
-                xRadius = dist
-                yRadius = dist
-                x1 = int(math.cos(degree * 2 * math.pi / 360) * xRadius) + star_pos_x
-                y1 = int(math.sin(degree * 2 * math.pi / 360) * yRadius) + star_pos_y
-                screen.fill(RICHBLUE)
-
+                x = int(math.cos(degree * 2 * math.pi / 360) * dist) + star_pos_x
+                y = int(math.sin(degree * 2 * math.pi / 360) * dist) + star_pos_y
 
                 p.drawOrbit(screen, star_pos_x, star_pos_y)
-                p.drawPlanet(screen, x1, y1)
+                p.drawPlanet(screen, x, y)
+
             pygame.display.flip()
             clock.tick(5)
-
-
 
     def AddPlanet(self, planet):
         self.Planets.append(planet)

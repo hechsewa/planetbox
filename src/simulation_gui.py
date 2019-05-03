@@ -19,20 +19,23 @@ simulation = Simulation.Simulation()
 
 #open seprate window for simulation, init pygame
 def create():
+    global sim
     pygame.display.set_caption('Planetbox')
     pygame.display.set_icon(ico)
     DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
     DISPLAY.fill(RICHBLUE)
 
+    #testing data
     tester = Planet.Planet(6371, 597, "terrestrial", 1, "earth")
     merc = Planet.Planet(2440, 33, "gas", 0.39, "merc")
-    gwen = Planet.Planet(7440, 600, "gas", 2, "gwen")
-    DISPLAY.fill(RICHBLUE)
+    gwen = Planet.Planet(7440, 600, "ice", 2, "gwen")
+
     simulation.AddPlanet(tester)
     simulation.AddPlanet(merc)
     simulation.AddPlanet(gwen)
 
-    simulation.drawPlanets(DISPLAY, display_width, display_height)
+    DISPLAY.fill(RICHBLUE)
+    simulation.animatePlanets(DISPLAY, display_width, display_height, -10)
 
     while True:
         for event in pygame.event.get():
@@ -42,7 +45,7 @@ def create():
             if event.type == pygame.VIDEORESIZE:
                 DISPLAY = pygame.display.set_mode(event.dict['size'], pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
                 DISPLAY.fill(RICHBLUE)
-                simulation.drawPlanets(DISPLAY, event.dict['w'], event.dict['h'])
+                simulation.animatePlanets(DISPLAY, event.dict['w'], event.dict['h'])
 
 
 

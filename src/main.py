@@ -51,6 +51,10 @@ class SkyPrev(pygame.sprite.Sprite):
     def __init__(self):
         pygame.draw.rect(DISPLAY, BLACK, (350, 250, 415, 315), 0)
         pygame.draw.rect(DISPLAY, WHITE, (350, 250, 415, 315), 2)
+        tester = Planet.Planet(6371, 597, "terrestrial", 1, "earth")
+        simulation.AddPlanet(tester)
+        simulation.drawPlanets(DISPLAY, 415, 315, 350, 250)
+
 
 def apploop():
     #main app loo
@@ -168,6 +172,8 @@ def apploop():
         print(simulation.PrintPlanets())
         simulation_gui.create()
 
+    def updatePrev():
+        SkyPrev()
 
     # add button: adds planet to a list and updates prev
     addBtn = thorpy.make_button("Add planet", func=readPlanet)
@@ -182,7 +188,7 @@ def apploop():
     startBtn.set_font_color(WHITE)
 
     # update preview: adds newly added planets to the preview and rearranges the orbits
-    prevBtn = thorpy.make_button("Update preview")
+    prevBtn = thorpy.make_button("Update preview", func=updatePrev)
     prevBtn.set_size((100, 20))
     prevBtn.set_main_color(RICHBLUE)
     prevBtn.set_font_color(WHITE)
