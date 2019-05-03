@@ -22,6 +22,7 @@ class Planet:
         self.nrMoons = self.RandomizeMoons()
         self.year = self.KeplersThirdLaw()
         self.moons = []
+        self.degree = 0
 
     def KeplersThirdLaw(self):
         # T^2 / a^3 is const for every planet in this system -> check with good ol' Earth (Sun is in center, so why not?)
@@ -40,6 +41,8 @@ class Planet:
     def GravityCalculator(self, massFirst):
         return ((6.674 * massFirst * pow(10, 11))/ (pow(self.radius*1000, 2))) # 10^11 'cause 10^-11 from G and 10^22 from mass
 
+
+    #for drawing purposes
     def drawOrbit(self, screen, x, y):
         # planet distance from sun, draw orbit
         w, h = pygame.display.get_surface().get_size()
@@ -61,3 +64,16 @@ class Planet:
             pygame.draw.circle(screen, GAS, [x, y], size)
 
         return
+
+    def animate(self, screen, star_x, star_y, h):
+        self.degree += self.gravity;
+        if self.degree == 360:
+            self.degree = 0
+
+        dist = int(self.distance * (h / 3))
+        x = int(math.cos(self.degree * 2 * math.pi / 360) * dist) + star_x
+        y = int(math.sin(self.degree * 2 * math.pi / 360) * dist) + star_y
+
+        self.drawOrbit(screen, star_x, star_y)
+        self.drawPlanet(screen, x, y)
+        pygame.display.flip()

@@ -35,7 +35,7 @@ def create():
     simulation.AddPlanet(gwen)
 
     DISPLAY.fill(RICHBLUE)
-    simulation.animatePlanets(DISPLAY, display_width, display_height, -10)
+    simulation.animatePlanets(DISPLAY, display_width, display_height, -15)
 
     while True:
         for event in pygame.event.get():

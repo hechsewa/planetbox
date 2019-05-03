@@ -47,20 +47,13 @@ class Simulation:
                     self.animatePlanets(screen, event.dict['w'], event.dict['h'], degree)
 
             screen.fill(RICHBLUE)
-            degree += 10
-            if degree == 360:
-                degree = 0
+
             pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], 15)
             for p in self.Planets:
-                dist = int(p.distance * (h / 3))
-                x = int(math.cos(degree * 2 * math.pi / 360) * dist) + star_pos_x
-                y = int(math.sin(degree * 2 * math.pi / 360) * dist) + star_pos_y
-
-                p.drawOrbit(screen, star_pos_x, star_pos_y)
-                p.drawPlanet(screen, x, y)
+                p.animate(screen, star_pos_x, star_pos_y, h)
 
             pygame.display.flip()
-            clock.tick(5)
+            clock.tick(10)
 
     def AddPlanet(self, planet):
         self.Planets.append(planet)
