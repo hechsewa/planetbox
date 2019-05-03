@@ -1,6 +1,14 @@
 import random, math
 from src.MathEquations import *
 from src.Sun import *
+import pygame
+
+#planet colors
+TER = (206, 196, 105)
+ICE = (76, 134, 168)
+GAS = (226, 181, 147)
+WHITE = (255, 255, 255)
+RICHBLUE = (2, 1, 34)
 
 class Planet:
 
@@ -31,3 +39,25 @@ class Planet:
 
     def GravityCalculator(self, massFirst):
         return ((6.674 * massFirst * pow(10, 11))/ (pow(self.radius*1000, 2))) # 10^11 'cause 10^-11 from G and 10^22 from mass
+
+    def drawOrbit(self, screen, x, y):
+        # planet distance from sun, draw orbit
+        w, h = pygame.display.get_surface().get_size()
+        dist = int(self.distance * (h / 3));
+        pygame.draw.circle(screen, WHITE, [x, y], dist, 1)
+
+    #draw planet on simulation
+    def drawPlanet(self, screen, x, y):
+
+        #planet size (w/ resize)
+        w, h = pygame.display.get_surface().get_size()
+        size = int(self.radius/h)
+
+        if self.type == "terrestrial":
+            pygame.draw.circle(screen, TER, [x, y], size)
+        elif self.type == "ice":
+            pygame.draw.circle(screen, ICE, [x, y], size)
+        elif self.type == "gas":
+            pygame.draw.circle(screen, GAS, [x, y], size)
+
+        return

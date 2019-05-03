@@ -27,9 +27,9 @@ class Background(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = location
 
 
-def blit_logo(DISPLAY):
+def blit_logo(DISPLAY, w, h):
     logo = pygame.image.load('../imgs/logo300.png')
-    DISPLAY.blit(logo, (220, 50))
+    DISPLAY.blit(logo, (w, h))
     pygame.display.flip()
 
 
@@ -41,10 +41,12 @@ def text_object(text, font):
 def button(msg,x,y,w,h, DISPLAY):
     mouse = pygame.mouse.get_pos()
 
-    if x+w> mouse[0] > x and y+h>mouse[1] > y:
+    if x+w > mouse[0] > x and y+h > mouse[1] > y:
         pygame.draw.rect(DISPLAY, WHITE, (x,y,w,h))
+        pygame.display.flip()
     else:
         pygame.draw.rect(DISPLAY, VANILLA, (x, y, w, h))
+        pygame.display.flip()
 
     smallText = pygame.font.Font("../imgs/Ubuntu-B.ttf", 18)
     textSurf, textRect = text_object(msg, smallText)
@@ -60,38 +62,65 @@ def mainer():
     display_height = 600
     ico = pygame.image.load('../imgs/favicon.ico')
 
-    DISPLAY = pygame.display.set_mode((display_width, display_height))
+    DISPLAY = pygame.display.set_mode((display_width, display_height), RESIZABLE)
+
     pygame.display.set_caption('Planetbox')
     pygame.display.set_icon(ico)
     DISPLAY.fill(RICHBLUE)
 
-
     # display background
     Bg = Background('../imgs/bg.jpg', [0, 0])
-    DISPLAY.blit(Bg.image, Bg.rect)
+    DISPLAY.blit(pygame.transform.scale(Bg.image, (display_width, display_height)), Bg.rect)
 
-
-    blit_logo(DISPLAY)
+    blit_logo(DISPLAY, 220, 50)
+    btn_w = 320
+    btn_h1 = 270
+    btn_h2 = 340
+    btn_h3 = 410
+    button("START", btn_w, btn_h1, 150, 50, DISPLAY)
+    button("ABOUT", btn_w, btn_h2, 150, 50, DISPLAY)
+    button("QUIT", btn_w, btn_h3, 150, 50, DISPLAY)
+    pygame.display.update()
 
     # Event loop
     while 1:
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
+
+            #resizablility
+            if event.type == pygame.VIDEORESIZE:
+                DISPLAY = pygame.display.set_mode(event.dict['size'], HWSURFACE | DOUBLEBUF | RESIZABLE)
+                DISPLAY.blit(pygame.transform.scale(Bg.image, event.dict['size']), (0, 0))
+                pygame.display.flip()
+                btnH = 50
+                btnW = 150
+
+                logoH = event.dict['h']/8;
+                logoW = event.dict['w']/3;
+                spaceH = event.dict['h']/10;
+
+                btn_w = logoW + btnW / 2
+                btn_h1 = logoH + 3.5 * spaceH
+                btn_h2 = logoH + 3.5 * spaceH + btnH + 20
+                btn_h3 = logoH + 3.5 * spaceH + 2 * btnH + 40
+
+                blit_logo(DISPLAY, logoW, logoH);
+                button("START", btn_w, btn_h1, btnW, btnH, DISPLAY)
+                button("ABOUT", btn_w, btn_h2, btnW, btnH, DISPLAY)
+                button("QUIT", btn_w, btn_h3, btnW, btnH, DISPLAY)
+                pygame.display.update()
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # start button
-                if pygame.mouse.get_pos()[0] >= 320 and pygame.mouse.get_pos()[1] >= 270:
-                    if pygame.mouse.get_pos()[0] <= 470 and pygame.mouse.get_pos()[1] <= 320:
+                if pygame.mouse.get_pos()[0] >= btn_w and pygame.mouse.get_pos()[1] >= btn_h1:
+                    if pygame.mouse.get_pos()[0] <= btn_w+150 and pygame.mouse.get_pos()[1] <= (btn_h1+50):
                         main.apploop()
                 # quit button
-                if pygame.mouse.get_pos()[0] >= 320 and pygame.mouse.get_pos()[1] >= 410:
-                    if pygame.mouse.get_pos()[0] <= 470 and pygame.mouse.get_pos()[1] <= 460:
+                if pygame.mouse.get_pos()[0] >= btn_w and pygame.mouse.get_pos()[1] >= btn_h3:
+                    if pygame.mouse.get_pos()[0] <= btn_w+150 and pygame.mouse.get_pos()[1] <= btn_h3+50:
                         pygame.display.flip()
                         return
-
-        button("START", 320, 270, 150, 50, DISPLAY)
-        button("ABOUT", 320, 340, 150, 50, DISPLAY)
-        button("QUIT", 320, 410, 150, 50, DISPLAY)
 
         pygame.display.update()
         clock.tick(15)

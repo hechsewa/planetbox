@@ -9,6 +9,7 @@ haha april fools I suck at this :)
 import thorpy, pygame, math, ctypes
 from src import Planet
 from src import AlertBox
+from src import simulation_gui
 
 #define some colors
 from src.Simulation import Simulation
@@ -26,7 +27,7 @@ display_width = 800
 display_height = 600
 ico = pygame.image.load('../imgs/favicon.ico')
 pygame.init()
-DISPLAY = pygame.display.set_mode((display_width, display_height))
+DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
 
 #global planet variables
 prad=0
@@ -72,17 +73,18 @@ def apploop():
     #logo
     logo = pygame.image.load('../imgs/logo300.png')
 
-    def RadiusCheck(radius, type):
+    def radius_check(radius, type):
         if (type == "terrestrial"):
             if (radius < 300):
                 return 0
             else:
                 return 1
-        elif (type == "ice" or type == "gas"): #TODO error message for that
+        elif (type == "ice" or type == "gas"):
             if (radius < 200):
                 return 0
             else:
                 return 1
+
     # checks if the density is ok
     def density_check(ptype, pmass, prad):
         # pmass: 10^22 kg, prad: km
@@ -134,9 +136,12 @@ def apploop():
     def readPlanet():
         global prad, pmass, pname, ptype, simulation, pdist
         ptype = p_kind.get_selected().get_text()
-        val = density_check(ptype, pmass, prad)
-        if val == 0 or val == 1:
-            AlertBox.AlertBox(val)
+        den_val = density_check(ptype, pmass, prad)
+        rad_val = radius_check(prad, ptype)
+        if den_val == 0 or den_val == 1: #wrong density
+            AlertBox.AlertBox(den_val, "density")
+        elif rad_val == 0: #radius too small
+            AlertBox.AlertBox(rad_val, "radius")
         else:
             print(ptype)
             #create a new planet
@@ -161,6 +166,7 @@ def apploop():
         simulation.CreateMoons()
         print("Starting simulation...")
         print(simulation.PrintPlanets())
+        simulation_gui.create()
 
 
     # add button: adds planet to a list and updates prev

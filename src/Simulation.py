@@ -2,8 +2,48 @@ from src.Planet import *
 from src.Moon import *
 
 class Simulation:
+
     def __init__(self):
         self.Planets = []
+
+    def drawPlanets(self, screen, w, h):
+        star_pos_x = int(w / 2)
+        star_pos_y = int(h / 2)
+        # display main star
+        pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], 15)
+        for p in self.Planets:
+            dist = int(p.distance * (h / 3))
+            x = int(math.cos(0 * 2 * math.pi / 360)*dist) + star_pos_x
+            y = int(math.sin(0 * 2 * math.pi / 360) * dist) + star_pos_y
+            p.drawOrbit(screen, star_pos_x, star_pos_y)
+            p.drawPlanet(screen, x, y)
+            pygame.display.update()
+
+
+    def animatePlanets(self, screen, w, h):
+        # w, h = pygame.display.get_surface().get_size()
+        star_pos_x = int(w / 2)
+        star_pos_y = int(h / 2)
+
+        clock = pygame.time.Clock()
+
+        for degree in range(0, 360, 10):
+            # display main star
+            pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], 15)
+            for p in self.Planets:
+                dist = int(p.distance * (h / 3))
+                xRadius = dist
+                yRadius = dist
+                x1 = int(math.cos(degree * 2 * math.pi / 360) * xRadius) + star_pos_x
+                y1 = int(math.sin(degree * 2 * math.pi / 360) * yRadius) + star_pos_y
+                screen.fill(RICHBLUE)
+
+
+                p.drawOrbit(screen, star_pos_x, star_pos_y)
+                p.drawPlanet(screen, x1, y1)
+            pygame.display.flip()
+            clock.tick(5)
+
 
 
     def AddPlanet(self, planet):
