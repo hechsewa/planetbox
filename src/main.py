@@ -1,18 +1,23 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Mon Apr  1 23:45:27 2019
 haha april fools I suck at this :)
 @author: hushmans
+# TODO: resizable!!
 """
 #pip install thorpy, pygame
-import thorpy, pygame, math, ctypes
+import thorpy
+import pygame
+import math
 from src import Planet
 from src import AlertBox
 from src import simulation_gui
 
 #define some colors
 from src.Simulation import Simulation
+from src.PlanetExplorer import PlanetExplorer
+
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -29,16 +34,18 @@ ico = pygame.image.load('../imgs/favicon.ico')
 pygame.init()
 DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
 
-#global planet variables
+# global planet variables
 prad=0
 pmass=0
 pdist=0 # distance to the sun
 pname=""
 ptype=""
 
+# def some useful objects
 simulation = Simulation()
+planetExp = PlanetExplorer(simulation)
 
-#background handling
+# background handling
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
@@ -46,13 +53,11 @@ class Background(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
-#sky prev handling
+# sky prev handling
 class SkyPrev(pygame.sprite.Sprite):
     def __init__(self):
         pygame.draw.rect(DISPLAY, BLACK, (350, 250, 415, 315), 0)
         pygame.draw.rect(DISPLAY, WHITE, (350, 250, 415, 315), 2)
-        #tester = Planet.Planet(6371, 597, "terrestrial", 1, "earth")
-        #simulation.AddPlanet(tester)
         simulation.drawPlanets(DISPLAY, 415, 315, 350, 250)
 
 
@@ -135,7 +140,6 @@ def apploop():
             ptype = event.el.get_value()
             #print(ptype)
 
-
     # pressing add planet btn reaction
     def readPlanet():
         global prad, pmass, pname, ptype, simulation, pdist
@@ -164,7 +168,12 @@ def apploop():
 
             planet = Planet.Planet(prad, pmass, ptype, pdist, pname)
             simulation.AddPlanet(planet)
+            # update preview
+            SkyPrev()
 
+    def startExplorer():
+        print("Starting explorer...")
+        planetExp.pe_main()
 
     def startSimulation():
         simulation.CreateMoons()
@@ -172,24 +181,21 @@ def apploop():
         print(simulation.PrintPlanets())
         simulation_gui.create(simulation)
 
-    def updatePrev():
-        SkyPrev()
-
     # add button: adds planet to a list and updates prev
     addBtn = thorpy.make_button("Add planet", func=readPlanet)
-    addBtn.set_size((100, 20))
+    addBtn.set_size((120, 20))
     addBtn.set_main_color(RICHBLUE)
     addBtn.set_font_color(WHITE)
 
     # new window: starts simulation
     startBtn = thorpy.make_button("Start simulation", func=startSimulation)
-    startBtn.set_size((100, 20))
+    startBtn.set_size((120, 20))
     startBtn.set_main_color(RICHBLUE)
     startBtn.set_font_color(WHITE)
 
-    # update preview: adds newly added planets to the preview and rearranges the orbits
-    prevBtn = thorpy.make_button("Update preview", func=updatePrev)
-    prevBtn.set_size((100, 20))
+    # explore planets: lets u choose a planet and prints info about it and moons simulation
+    prevBtn = thorpy.make_button("Explore the planets", func=startExplorer)
+    prevBtn.set_size((120, 20))
     prevBtn.set_main_color(RICHBLUE)
     prevBtn.set_font_color(WHITE)
 

@@ -1,17 +1,27 @@
 from src.Planet import *
 from src.Moon import *
+from src.menu import *
+
+# TODO: resizable!!
 
 #global var for controlling the simulation
 sim = True
+pause = False
 
 class Simulation:
 
     def __init__(self):
         self.Planets = []
+        self.PlanetsCord = []  # stores planets initial (x, y, radius)
 
+    # calculates planets' position and size
+    def calcPlanetCord(self, x, y, p, h):
+        rad = int(p.radius / h)
+        self.PlanetsCord.append((x, y, rad))
 
     #draws static planets (for preview)
     def drawPlanets(self, screen, w, h, xs, ys):
+        self.PlanetsCord = []
         #x, y point to where in starts, usually (0,0) but preview :<
         star_pos_x = xs + int(w / 2)
         star_pos_y = ys + int(h / 2)
@@ -22,12 +32,36 @@ class Simulation:
             x = int(math.cos(0 * 2 * math.pi / 360)*dist) + star_pos_x
             y = int(math.sin(0 * 2 * math.pi / 360) * dist) + star_pos_y
             p.drawPlanet(screen, x, y)
+            self.calcPlanetCord(x, y, p, h)
             pygame.display.update()
+
+    #unpause function
+    def unpause(self):
+        global pause
+        pause = False
+
+    #pause function
+    def paused(self):
+        global pause
+
+        while pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.unpause()
+                    #return to menu from pause
+                    if event.key == pygame.K_m: #if m then stop and go to menu
+                        self.Planets = [] #reset planets
+                        mainer()
+
 
 
     #animates the planets
     def animatePlanets(self, screen, w, h, degree):
-        global sim
+        global sim, pause
         star_pos_x = int(w / 2)
         star_pos_y = int(h / 2)
         clock = pygame.time.Clock()
@@ -45,6 +79,14 @@ class Simulation:
                     screen.fill(RICHBLUE)
                     sim = False
                     self.animatePlanets(screen, event.dict['w'], event.dict['h'], degree)
+                # KEY EVENTS
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:  # if space pressed then pause
+                        pause = True
+                        self.paused()
+                    if event.key == pygame.K_m:  # if m then stop and go to menu
+                        self.Planets = []  # reset planets
+                        mainer()
 
             screen.fill(RICHBLUE)
 
@@ -61,11 +103,9 @@ class Simulation:
     def PrintPlanets(self):
         i = 1
         for planet in self.Planets:
-            print("Planet nb: " + str(i) + ", Name: " + planet.name + ", Distance: " + str(planet.distance) +", Mass: " + str(planet.mass))
-            print("Gravitational field: " + str(planet.gravity) + "N/kg, Year time: " + str(planet.year))
-            print("Number of moons: " + str(planet.nrMoons))
+            print("Planet nb: " + str(i))
+            print(planet.printPlanet())
             i = i+1
-
 
     def CreateMoons(self):
         for planet in self.Planets:

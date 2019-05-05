@@ -1,6 +1,11 @@
 import random, math
 from src.MathEquations import *
 
+#colors
+WHITE = (255, 255, 255)
+RICHBLUE = (2, 1, 34)
+GREY = (193, 187, 187)
+
 class Moon:
     def __init__(self, radius, mass, motherPlanet):
         self.radius = radius
@@ -11,10 +16,9 @@ class Moon:
         self.gravity = motherPlanet.GravityCalculator(self.mass)
 
 
-
     def GenerateDistance(self):
-        dist = random.randint(self.radius * 5, self.radius * 20)
-        v = int(round((6.67 * self.motherPlanet.mass / dist) ** (1. / 3)) ** 3)
+        dist = random.uniform(0, 1) #distance in LD units (lunar distance)
+        #v = int(round((6.67 * self.motherPlanet.mass / dist) ** (1. / 3)) ** 3)
         return dist
 
 

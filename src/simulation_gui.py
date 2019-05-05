@@ -1,7 +1,7 @@
 import pygame
 
-from src import Planet
-from src import Simulation
+from src.Planet import Planet
+from src.Simulation import Simulation
 
 # define some colors
 WHITE = (255, 255, 255)
@@ -32,7 +32,6 @@ def create(simulation):
     #simulation.AddPlanet(merc)
     #simulation.AddPlanet(gwen)
 
-    DISPLAY.fill(RICHBLUE)
     simulation.animatePlanets(DISPLAY, display_width, display_height, -15)
 
     while True:

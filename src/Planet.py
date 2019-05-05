@@ -1,6 +1,7 @@
 import random, math
 from src.MathEquations import *
 from src.Sun import *
+from src.PlanetAnimation import *
 import pygame
 
 #planet colors
@@ -9,6 +10,7 @@ ICE = (76, 134, 168)
 GAS = (226, 181, 147)
 WHITE = (255, 255, 255)
 RICHBLUE = (2, 1, 34)
+
 
 class Planet:
 
@@ -23,6 +25,9 @@ class Planet:
         self.year = self.KeplersThirdLaw()
         self.moons = []
         self.degree = 0
+        self.cords = []
+        self.drawn = 0
+        self.animation = PlanetAnimation(self)
 
     def KeplersThirdLaw(self):
         # T^2 / a^3 is const for every planet in this system -> check with good ol' Earth (Sun is in center, so why not?)
@@ -51,19 +56,36 @@ class Planet:
 
     #draw planet on simulation
     def drawPlanet(self, screen, x, y):
+        self.cords = []
 
         #planet size (w/ resize)
         w, h = pygame.display.get_surface().get_size()
         size = int(self.radius/h)
 
+        self.cords.append(x)
+        self.cords.append(y)
+        self.cords.append(size)
+
         if self.type == "terrestrial":
-            pygame.draw.circle(screen, TER, [x, y], size)
+            self.drawn = pygame.draw.circle(screen, TER, [x, y], size)
         elif self.type == "ice":
-            pygame.draw.circle(screen, ICE, [x, y], size)
+            self.drawn = pygame.draw.circle(screen, ICE, [x, y], size)
         elif self.type == "gas":
-            pygame.draw.circle(screen, GAS, [x, y], size)
+            self.drawn = pygame.draw.circle(screen, GAS, [x, y], size)
 
         return
+
+    def drawBigPlanet(self, screen, size):
+        w, h = pygame.display.get_surface().get_size()
+        x = int(w/2)
+        y = int(h/2)
+
+        if self.type == "terrestrial":
+            self.drawn = pygame.draw.circle(screen, TER, [x, y], size)
+        elif self.type == "ice":
+            self.drawn = pygame.draw.circle(screen, ICE, [x, y], size)
+        elif self.type == "gas":
+            self.drawn = pygame.draw.circle(screen, GAS, [x, y], size)
 
     def animate(self, screen, star_x, star_y, h):
         self.degree += self.gravity;
@@ -77,3 +99,9 @@ class Planet:
         self.drawOrbit(screen, star_x, star_y)
         self.drawPlanet(screen, x, y)
         pygame.display.flip()
+
+    def printPlanet(self):
+        msg = "Name: " + self.name + "\nType: " + self.type + "\nDistance: " + str(self.distance) + "AU\n" \
+              "Mass: " + str(self.mass) + "*10^22 kg\nGravitational field: " + str(self.gravity) + " N/kg\n" \
+              "Year time: " + str(self.year) + "\nNumber of moons: " + str(self.nrMoons) + ""
+        return msg

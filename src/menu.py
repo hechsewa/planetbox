@@ -86,7 +86,8 @@ def mainer():
     while 1:
         for event in pygame.event.get():
             if event.type == QUIT:
-                return
+                pygame.quit()
+                quit()
 
             #resizablility
             if event.type == pygame.VIDEORESIZE:
