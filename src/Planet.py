@@ -24,8 +24,8 @@ class Planet:
         self.nrMoons = self.RandomizeMoons()
         self.year = self.KeplersThirdLaw()
         self.moons = []
-        self.degree = 0
-        self.cords = []
+        self.degree = 0  # animation purposes
+        self.cords = []  # for preview display
         self.drawn = 0
         self.animation = PlanetAnimation(self)
 
@@ -61,6 +61,7 @@ class Planet:
         #planet size (w/ resize)
         w, h = pygame.display.get_surface().get_size()
         size = int(self.radius/h)
+        #print("Planet size: " + str(size))
 
         self.cords.append(x)
         self.cords.append(y)
@@ -100,6 +101,7 @@ class Planet:
         self.drawPlanet(screen, x, y)
         pygame.display.flip()
 
+    # for printing to file
     def printPlanet(self):
         msg = "Name: " + self.name + "\nType: " + self.type + "\nDistance: " + str(self.distance) + "AU\n" \
               "Mass: " + str(self.mass) + "*10^22 kg\nGravitational field: " + str(self.gravity) + " N/kg\n" \

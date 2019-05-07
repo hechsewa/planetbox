@@ -3,8 +3,9 @@
 import pygame
 from src.Planet import *
 from src.Moon import *
+from src.menu import *
 
-#some imports and globals
+# some imports and globals
 # define display size
 display_width = 800
 display_height = 600
@@ -13,11 +14,55 @@ ico = pygame.image.load('../imgs/favicon.ico')
 pygame.init()
 pygame.font.init()  # for text
 
+# globals for controlling the animation
+sim = True
+pause = False
+
 
 class PlanetAnimation:
 
     def __init__(self, planet):
         self.planet = planet
+        self.CreateMoons() # init the moons
+
+    def CreateMoons(self):
+        for nbMoon in range(self.planet.nrMoons):
+            if(len(str(self.planet.mass)) <= 8):
+                mass = random.randint(round(self.planet.mass / 10000), round(self.planet.mass / 100)) # for now its hardcoded, may think
+            else:                                                                   # about change later
+                mass = random.randint(round(self.planet.mass / 1000000), round(self.planet.mass / 1000))
+            if mass == 0:
+                mass = 1
+
+            highBorderDistance = int(round((mass / 4.8 * math.pi) ** (1. / 3)) ** 3)
+            lowBorderDistance = int(round((mass / 97.2 * math.pi) ** (1. / 3)) ** 3)
+            if lowBorderDistance == 0:
+                lowBorderDistance = 1
+            radius = random.randint(lowBorderDistance, highBorderDistance)
+            moon = Moon(radius, mass, self.planet)
+            self.planet.moons.append(moon)
+
+    def unpause(self):
+        global pause
+        pause = False
+
+        # pause function
+
+    def paused(self):
+        global pause
+
+        while pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.unpause()
+                    # return to menu from pause
+                    if event.key == pygame.K_m:  # if m then stop and go to menu
+                        self.planet.moons = []  # reset planets
+                        mainer()
 
     def text_object(self, msg, size):
         myfont = pygame.font.SysFont("../imgs/Ubuntu-R.ttf", size)
@@ -47,9 +92,8 @@ class PlanetAnimation:
         self.multiline_txt(DISPLAY, info, (0.05*w+20, 0.05*h+20), myfont)
         pygame.display.update()
 
-
     def planet_events(self, DISPLAY, w, h):
-        DISPLAY.fill(RICHBLUE)
+        #DISPLAY.fill(RICHBLUE)
         self.planet.drawBigPlanet(DISPLAY, int(h*0.1))
 
         maintxt = "Planet Information"
@@ -57,28 +101,45 @@ class PlanetAnimation:
         DISPLAY.blit(textSurf, (0.05 * w, 0.05 * h))
 
         self.printPlanetInfo(DISPLAY, w, h)
-        pygame.display.update()
+        #pygame.display.update()
 
-    def planet_loop(self):
-        global ico
-        DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
+    # animates the moons
+    def animateMoons(self, screen, w, h):
+        global sim, pause
+        planet_pos_x = int(w / 2)
+        planet_pos_y = int(h / 2)
         clock = pygame.time.Clock()
-        pygame.display.set_caption('Planetbox')
-        pygame.display.set_icon(ico)
-        DISPLAY.fill(RICHBLUE)
-        pygame.display.update()
 
-        self.planet_events(DISPLAY, display_width, display_height)
-
-        # main loop
-        while True:
+        sim = True
+        while sim:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
                 if event.type == pygame.VIDEORESIZE:
-                    DISPLAY = pygame.display.set_mode(event.dict['size'],
-                                                      pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
-                    DISPLAY.fill(RICHBLUE)
-                    self.planet_events(DISPLAY, event.dict['w'], event.dict['h'])
-                    pygame.display.update()
+                    screen = pygame.display.set_mode(event.dict['size'],
+                                                     pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
+                    screen.fill(RICHBLUE)
+                    sim = False
+                    self.animateMoons(screen, event.dict['w'], event.dict['h'])
+                # KEY EVENTS
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:  # if space pressed then pause
+                        pause = True
+                        self.paused()
+                    if event.key == pygame.K_e:
+                        main.apploop()
+                    if event.key == pygame.K_m:  # if m then stop and go to menu
+                        self.planet.moons = []  # reset moons
+                        mainer()
+
+            screen.fill(RICHBLUE)
+
+            # draw the planet and the planet's info
+            self.planet_events(screen, w, h)
+
+            for m in self.planet.moons:
+                m.animate(screen, planet_pos_x, planet_pos_y, h)
+
+            pygame.display.flip()
+            clock.tick(10)

@@ -176,7 +176,7 @@ def apploop():
         planetExp.pe_main()
 
     def startSimulation():
-        simulation.CreateMoons()
+        #simulation.CreateMoons()
         print("Starting simulation...")
         print(simulation.PrintPlanets())
         simulation_gui.create(simulation)

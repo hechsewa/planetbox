@@ -3,7 +3,8 @@
 from src.Planet import *
 from src.Moon import *
 from src.Simulation import *
-from src.menu import button
+from src.menu import *
+from src import explorer_gui
 import pygame
 
 # colors definition
@@ -39,11 +40,10 @@ class PlanetExplorer:
     def pe_events(self, DISPLAY, w, h):
         DISPLAY.fill(RICHBLUE)
         self.sim.drawPlanets(DISPLAY, w, h, 0, 0)
-
+        pygame.display.update()
         msg = "Click on the planet to explore it and its moons."
         textSurf = self.text_object(msg, 20)
         DISPLAY.blit(textSurf, (0.05*w, 0.05*h))
-
 
     # main app loop
     def pe_main(self):
@@ -75,7 +75,9 @@ class PlanetExplorer:
                     x = p.cords[0]
                     y = p.cords[1]
                     r = p.cords[2]
+                    rad = 10
                     mx, my = pygame.mouse.get_pos()
+
                     if mx >= x-r and mx <= x+r and my >= y-r and my <= y+r:
                         pygame.draw.circle(DISPLAY, WHITE, [x, y], r)
                         hover = self.text_object(p.name, 15)
@@ -85,13 +87,12 @@ class PlanetExplorer:
                         # if the planet is clicked then take to a single explorer
                         pressed1, pressed2, pressed3 = pygame.mouse.get_pressed()
                         if p.drawn.collidepoint((mx, my)) and pressed1:
-                            p.animation.planet_loop()
-
+                            explorer_gui.create(p.animation)
                     else:
                         #p.drawPlanet(DISPLAY, x, y)
                         w, h = pygame.display.get_surface().get_size()
                         self.pe_events(DISPLAY, w, h)
-                        pygame.display.update()
+                        #pygame.display.update()
 
             clock.tick(15)
 

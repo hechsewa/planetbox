@@ -2,11 +2,12 @@ from src.Planet import *
 from src.Moon import *
 from src.menu import *
 
-# TODO: resizable!!
+# FIXME: resizablity not working properly
 
-#global var for controlling the simulation
+# global var for controlling the simulation
 sim = True
 pause = False
+
 
 class Simulation:
 
@@ -14,12 +15,12 @@ class Simulation:
         self.Planets = []
         self.PlanetsCord = []  # stores planets initial (x, y, radius)
 
-    # calculates planets' position and size
+    # calculates planets' position and size (for preview)
     def calcPlanetCord(self, x, y, p, h):
         rad = int(p.radius / h)
         self.PlanetsCord.append((x, y, rad))
 
-    #draws static planets (for preview)
+    # draws static planets (for preview)
     def drawPlanets(self, screen, w, h, xs, ys):
         self.PlanetsCord = []
         #x, y point to where in starts, usually (0,0) but preview :<
@@ -57,10 +58,8 @@ class Simulation:
                         self.Planets = [] #reset planets
                         mainer()
 
-
-
-    #animates the planets
-    def animatePlanets(self, screen, w, h, degree):
+    # animates the planets
+    def animatePlanets(self, screen, w, h):
         global sim, pause
         star_pos_x = int(w / 2)
         star_pos_y = int(h / 2)
@@ -78,7 +77,7 @@ class Simulation:
                                                      pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
                     screen.fill(RICHBLUE)
                     sim = False
-                    self.animatePlanets(screen, event.dict['w'], event.dict['h'], degree)
+                    self.animatePlanets(screen, event.dict['w'], event.dict['h'])
                 # KEY EVENTS
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:  # if space pressed then pause
@@ -107,20 +106,4 @@ class Simulation:
             print(planet.printPlanet())
             i = i+1
 
-    def CreateMoons(self):
-        for planet in self.Planets:
-            for nbMoon in range(planet.nrMoons):
-                if(len(str(planet.mass)) <= 8):
-                    mass = random.randint(round(planet.mass / 10000), round(planet.mass / 100)) # for now its hardcoded, may think
-                else:                                                                   # about change later
-                    mass = random.randint(round(planet.mass / 1000000), round(planet.mass / 1000))
-                if mass == 0:
-                    mass = 1
-                highBorderDistance = int(round((mass / 4.8 * math.pi) ** (1. / 3)) ** 3)
-                lowBorderDistance = int(round((mass / 97.2 * math.pi) ** (1. / 3)) ** 3)
-                if lowBorderDistance == 0:
-                    lowBorderDistance = 1
-                radius = random.randint(lowBorderDistance, highBorderDistance)
-                moon = Moon(radius, mass, planet)
-                planet.moons.append(moon)
 
