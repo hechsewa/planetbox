@@ -4,7 +4,8 @@ import pygame
 from src.Planet import *
 from src.Moon import *
 from src.menu import *
-from OpenGL.GL import *
+from src.PlanetExplorer import PlanetExplorer
+# from OpenGL.GL import *
 
 # some imports and globals
 # define display size
@@ -19,13 +20,14 @@ pygame.font.init()  # for text
 sim = True
 pause = False
 
-
 class PlanetAnimation:
 
     def __init__(self, planet):
         self.planet = planet
-        self.CreateMoons() # init the moons
+        self.CreateMoons()  # init the moons
 
+    def setSimulation(self, simulation):
+        self.exp = PlanetExplorer(simulation)
 
     def CreateMoons(self):
         for nbMoon in range(self.planet.nrMoons):
@@ -62,8 +64,10 @@ class PlanetAnimation:
                     if event.key == pygame.K_SPACE:
                         self.unpause()
                     # return to menu from pause
+                    if event.key == pygame.K_e:
+                        self.exp.pe_main()
                     if event.key == pygame.K_m:  # if m then stop and go to menu
-                        self.planet.moons = []  # reset planets
+                        # self.planet.moons = []
                         mainer()
 
     def text_object(self, msg, size):
@@ -94,13 +98,16 @@ class PlanetAnimation:
         self.multiline_txt(DISPLAY, info, (0.05*w+20, 0.05*h+20), myfont)
         pygame.display.update()
 
-    def planet_events(self, DISPLAY, w, h):
+    def planet_events(self, DISPLAY, w, h, x, y):
         #DISPLAY.fill(RICHBLUE)
         self.planet.drawBigPlanet(DISPLAY, int(h*0.1))
 
         maintxt = "Planet Information"
         textSurf = self.text_object(maintxt, 20)
         DISPLAY.blit(textSurf, (0.05 * w, 0.05 * h))
+
+        for m in self.planet.moons:
+            m.drawOrbit(DISPLAY, x, y)
 
         self.printPlanetInfo(DISPLAY, w, h)
         #pygame.display.update()
@@ -135,8 +142,8 @@ class PlanetAnimation:
                     if event.key == pygame.K_SPACE:  # if space pressed then pause
                         pause = True
                         self.paused()
-                    if event.key == pygame.K_e:
-                        main.apploop()
+                    if event.key == pygame.K_e:  # back to explorer
+                        self.exp.pe_main()
                     if event.key == pygame.K_m:  # if m then stop and go to menu
                         self.planet.moons = []  # reset moons
                         mainer()
@@ -144,7 +151,7 @@ class PlanetAnimation:
             screen.fill(RICHBLUE)
 
             # draw the planet and the planet's info
-            self.planet_events(screen, w, h)
+            self.planet_events(screen, w, h, planet_pos_x, planet_pos_y)
             for m in self.planet.moons:
                 m.animate(screen, planet_pos_x, planet_pos_y, h)
 

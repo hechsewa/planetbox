@@ -52,7 +52,7 @@ class Moon:
         x = int(math.cos(self.degree * 2 * math.pi / 360) * dist) + planet_x
         y = int(math.sin(self.degree * 2 * math.pi / 360) * dist) + planet_y
 
-        self.drawOrbit(screen, planet_x, planet_y)
+        # self.drawOrbit(screen, planet_x, planet_y)
         self.drawMoon(screen, x, y)
         pygame.display.flip()
 

@@ -1,6 +1,6 @@
 import pygame
 
-from src.Planet import Planet
+# from src.Planet import Planet
 from src.Moon import *
 
 # define some colors
@@ -17,13 +17,14 @@ pygame.init()
 
 
 # open seprate window for simulation, init pygame
-def create(planetani):
+def create(planetani, simulation):
     global ico
     pygame.display.set_caption('Planetbox')
     pygame.display.set_icon(ico)
     DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
     DISPLAY.fill(RICHBLUE)
 
+    planetani.setSimulation(simulation)
     planetani.animateMoons(DISPLAY, display_width, display_height)
 
     while True:

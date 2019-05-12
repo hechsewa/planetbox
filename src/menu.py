@@ -120,8 +120,8 @@ def mainer():
                 # quit button
                 if pygame.mouse.get_pos()[0] >= btn_w and pygame.mouse.get_pos()[1] >= btn_h3:
                     if pygame.mouse.get_pos()[0] <= btn_w+150 and pygame.mouse.get_pos()[1] <= btn_h3+50:
-                        pygame.display.flip()
-                        return
+                        pygame.quit()
+                        quit()
 
         pygame.display.update()
         clock.tick(15)

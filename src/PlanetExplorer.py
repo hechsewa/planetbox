@@ -24,8 +24,7 @@ ico = pygame.image.load('../imgs/favicon.ico')
 pygame.init()
 pygame.font.init()  # for text
 
-# TODO: displays a preview of the planets and after clicking on one it takes u to the richblue screen with planet in
-# TODO: the middle and moons orbiting animated
+
 class PlanetExplorer:
 
     def __init__(self, simulation):
@@ -56,6 +55,7 @@ class PlanetExplorer:
         pygame.display.update()
 
         self.pe_events(DISPLAY, display_width, display_height)
+        pygame.display.flip()
 
         # main loop
         while True:
@@ -71,28 +71,27 @@ class PlanetExplorer:
                     pygame.display.update()
 
                 # hovering and clicking on the planet
-                for p in self.sim.Planets:
-                    x = p.cords[0] # TODO: make it for all planets, not just last one
-                    y = p.cords[1]
-                    r = p.cords[2]
-                    rad = 10
-                    mx, my = pygame.mouse.get_pos()
+            for p in self.sim.Planets:
+                x = p.cords[0]
+                y = p.cords[1]
+                r = p.cords[2]
+                mx, my = pygame.mouse.get_pos()
 
-                    if mx >= x-r and mx <= x+r and my >= y-r and my <= y+r:
-                        pygame.draw.circle(DISPLAY, WHITE, [x, y], r)
-                        hover = self.text_object(p.name, 15)
-                        DISPLAY.blit(hover, (x, (y+r)*0.9))
-                        pygame.display.update()
+                if mx >= x-r and mx <= x+r and my >= y-r and my <= y+r:
+                    pygame.draw.circle(DISPLAY, WHITE, [x, y], r)
+                    hover = self.text_object(p.name, 15)
+                    DISPLAY.blit(hover, (x, (y+r)*0.9))
+                    pygame.display.update()
 
-                        # if the planet is clicked then take to a single explorer
-                        pressed1, pressed2, pressed3 = pygame.mouse.get_pressed()
-                        if p.drawn.collidepoint((mx, my)) and pressed1:
-                            explorer_gui.create(p.animation)
+                    # if the planet is clicked then take to a single explorer
+                    pressed1, pressed2, pressed3 = pygame.mouse.get_pressed()
+                    if p.drawn.collidepoint((mx, my)) and pressed1:
+                        explorer_gui.create(p.animation, self.sim)
                     else:
                         #p.drawPlanet(DISPLAY, x, y)
                         w, h = pygame.display.get_surface().get_size()
                         self.pe_events(DISPLAY, w, h)
-                        #pygame.display.update()
+                        pygame.display.update()
 
             clock.tick(15)
 
