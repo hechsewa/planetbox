@@ -58,7 +58,7 @@ class SkyPrev(pygame.sprite.Sprite):
     def __init__(self):
         pygame.draw.rect(DISPLAY, BLACK, (350, 250, 415, 315), 0)
         pygame.draw.rect(DISPLAY, WHITE, (350, 250, 415, 315), 2)
-        simulation.drawPlanets(DISPLAY, 415, 315, 350, 250)
+        simulation.drawPlanets(DISPLAY, 415, 315, 200, 250)
 
 
 def apploop():

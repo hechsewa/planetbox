@@ -44,15 +44,16 @@ class Planet:
                                                                   # number of moons for each planet in solar system
 
     def GravityCalculator(self, massFirst):
-        return ((6.674 * massFirst * pow(10, 11))/ (pow(self.radius*1000, 2))) # 10^11 'cause 10^-11 from G and 10^22 from mass
+        return (6.674 * massFirst * pow(10, 11)) / (pow(self.radius * 1000, 2))  # 10^11 'cause 10^-11 from G and 10^22 from mass
 
 
     #for drawing purposes
     def drawOrbit(self, screen, x, y):
         # planet distance from sun, draw orbit
         w, h = pygame.display.get_surface().get_size()
-        dist = int(self.distance * (h / 3));
+        dist = int(self.distance * (h / 3))
         pygame.draw.circle(screen, WHITE, [x, y], dist, 1)
+
 
     #draw planet on simulation
     def drawPlanet(self, screen, x, y):
@@ -60,7 +61,7 @@ class Planet:
 
         #planet size (w/ resize)
         w, h = pygame.display.get_surface().get_size()
-        size = int(self.radius/h)
+        size = int(self.radius/1000)
         #print("Planet size: " + str(size))
 
         self.cords.append(x)
@@ -80,7 +81,7 @@ class Planet:
         w, h = pygame.display.get_surface().get_size()
         x = int(w/2)
         y = int(h/2)
-
+        size = int(self.radius / 1000)
         if self.type == "terrestrial":
             self.drawn = pygame.draw.circle(screen, TER, [x, y], size)
         elif self.type == "ice":
@@ -89,7 +90,7 @@ class Planet:
             self.drawn = pygame.draw.circle(screen, GAS, [x, y], size)
 
     def animate(self, screen, star_x, star_y, h):
-        self.degree += self.gravity;
+        self.degree += self.gravity
         if self.degree == 360:
             self.degree = 0
 

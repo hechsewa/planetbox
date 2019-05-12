@@ -72,7 +72,7 @@ class PlanetExplorer:
 
                 # hovering and clicking on the planet
                 for p in self.sim.Planets:
-                    x = p.cords[0]
+                    x = p.cords[0] # TODO: make it for all planets, not just last one
                     y = p.cords[1]
                     r = p.cords[2]
                     rad = 10

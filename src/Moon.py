@@ -35,12 +35,12 @@ class Moon:
         w, h = pygame.display.get_surface().get_size()
         size = int(self.radius*(0.01*h))
 
-        pygame.draw.circle(screen, GREY, [x, y], size)
+        pygame.draw.circle(screen, GREY, [x, y], 3)
 
     def drawOrbit(self, screen, x, y):
         # moon distance from planet, draw orbit
         w, h = pygame.display.get_surface().get_size()
-        dist = int(self.distance * (h / 3));
+        dist = int(self.distance * (h / 3))
         pygame.draw.circle(screen, WHITE, [x, y], dist, 1)
 
     def animate(self, screen, planet_x, planet_y, h):
@@ -58,7 +58,7 @@ class Moon:
 
     # for printing to file
     def printMoon(self):
-        msg = "Distance to the planet: " + str(self.distance) + "LD\n" \
+        msg = "\nDistance to the planet: " + str(self.distance) + "LD\n" \
               "Mass: " + str(self.mass) + "*10^22 kg\nGravitational field: " + str(self.gravity) + " N/kg\n" \
               "Radius: " + str(self.radius) + " km"
         return msg

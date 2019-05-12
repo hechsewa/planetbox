@@ -4,6 +4,7 @@ import pygame
 from src.Planet import *
 from src.Moon import *
 from src.menu import *
+from OpenGL.GL import *
 
 # some imports and globals
 # define display size
@@ -24,6 +25,7 @@ class PlanetAnimation:
     def __init__(self, planet):
         self.planet = planet
         self.CreateMoons() # init the moons
+
 
     def CreateMoons(self):
         for nbMoon in range(self.planet.nrMoons):
@@ -105,6 +107,7 @@ class PlanetAnimation:
 
     # animates the moons
     def animateMoons(self, screen, w, h):
+
         global sim, pause
         planet_pos_x = int(w / 2)
         planet_pos_y = int(h / 2)
@@ -119,11 +122,16 @@ class PlanetAnimation:
                 if event.type == pygame.VIDEORESIZE:
                     screen = pygame.display.set_mode(event.dict['size'],
                                                      pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
+                    #glTranslatef(0.0, 0.0, -5.0)  # moving back
                     screen.fill(RICHBLUE)
                     sim = False
                     self.animateMoons(screen, event.dict['w'], event.dict['h'])
                 # KEY EVENTS
                 if event.type == pygame.KEYDOWN:
+                  #  if event.key == pygame.K_z:
+                   #     glTranslatef(0.0, 0.0, 1.0)
+                   # if event.key == pygame.K_z:
+                    #    glTranslatef(0.0, 0.0, -1.0)
                     if event.key == pygame.K_SPACE:  # if space pressed then pause
                         pause = True
                         self.paused()
@@ -137,9 +145,8 @@ class PlanetAnimation:
 
             # draw the planet and the planet's info
             self.planet_events(screen, w, h)
-
             for m in self.planet.moons:
                 m.animate(screen, planet_pos_x, planet_pos_y, h)
 
             pygame.display.flip()
-            clock.tick(10)
+            clock.tick(100)

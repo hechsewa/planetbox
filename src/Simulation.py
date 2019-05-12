@@ -22,16 +22,20 @@ class Simulation:
 
     # draws static planets (for preview)
     def drawPlanets(self, screen, w, h, xs, ys):
+        self.orderSystem()
         self.PlanetsCord = []
         #x, y point to where in starts, usually (0,0) but preview :<
         star_pos_x = xs + int(w / 2)
         star_pos_y = ys + int(h / 2)
         # display main star
         pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], 15)
+        if len(self.Planets) != 0:
+            dist = int(300/len(self.Planets))  # distance between planets
+        i = 1
         for p in self.Planets:
-            dist = int(p.distance * (h / 3))
-            x = int(math.cos(0 * 2 * math.pi / 360)*dist) + star_pos_x
-            y = int(math.sin(0 * 2 * math.pi / 360) * dist) + star_pos_y
+            x = i*dist + star_pos_x
+            i = i + 1
+            y = star_pos_y
             p.drawPlanet(screen, x, y)
             self.calcPlanetCord(x, y, p, h)
             pygame.display.update()
@@ -57,6 +61,10 @@ class Simulation:
                     if event.key == pygame.K_m: #if m then stop and go to menu
                         self.Planets = [] #reset planets
                         mainer()
+
+    def orderSystem(self):
+        self.Planets.sort(key=lambda x: x.distance)
+
 
     # animates the planets
     def animatePlanets(self, screen, w, h):
@@ -86,6 +94,8 @@ class Simulation:
                     if event.key == pygame.K_m:  # if m then stop and go to menu
                         self.Planets = []  # reset planets
                         mainer()
+                    if event.key == pygame.K_s:
+                        self.WriteSimToFile()
 
             screen.fill(RICHBLUE)
 
@@ -106,4 +116,14 @@ class Simulation:
             print(planet.printPlanet())
             i = i+1
 
-
+    def WriteSimToFile(self):
+        f = open("Statistics.txt", "w+")
+        for planet in self.Planets:
+            f.write(planet.printPlanet())
+            i = 1
+            for moon in planet.moons:
+                f.write("\nMoon number %s:" % i)
+                f.write(moon.printMoon())
+                i = i + 1
+            f.write("\n--------\n")
+        f.close()

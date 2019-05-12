@@ -97,16 +97,16 @@ def mainer():
                 btnH = 50
                 btnW = 150
 
-                logoH = event.dict['h']/8;
-                logoW = event.dict['w']/3;
-                spaceH = event.dict['h']/10;
+                logoH = event.dict['h']/8
+                logoW = event.dict['w']/3
+                spaceH = event.dict['h']/10
 
                 btn_w = logoW + btnW / 2
                 btn_h1 = logoH + 3.5 * spaceH
                 btn_h2 = logoH + 3.5 * spaceH + btnH + 20
                 btn_h3 = logoH + 3.5 * spaceH + 2 * btnH + 40
 
-                blit_logo(DISPLAY, logoW, logoH);
+                blit_logo(DISPLAY, logoW, logoH)
                 button("START", btn_w, btn_h1, btnW, btnH, DISPLAY)
                 button("ABOUT", btn_w, btn_h2, btnW, btnH, DISPLAY)
                 button("QUIT", btn_w, btn_h3, btnW, btnH, DISPLAY)

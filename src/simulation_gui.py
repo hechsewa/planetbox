@@ -36,4 +36,4 @@ def create(simulation):
                 simulation.animatePlanets(DISPLAY, event.dict['w'], event.dict['h'])
 
 
-if __name__ == '__main__': create()
+if __name__ == '__main__' : create()
