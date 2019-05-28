@@ -70,13 +70,13 @@ def blit_all_info(DISPLAY, display_width, display_height):
     instr_sim = "Planetary system simulation: "
     instr_sim2 = "SPACE to pause/unpause simulation \n" \
                  "S to save information about your planetary system to a file containing all the calculations \n" \
-                 "M to go to the menu (resets simulation)\n" \
+                 "M to go to the menu\n" \
                  "A to go back to adding more planets \n"
 
     instr_exp = "Single planet simulation: "
     instr_exp2 = "SPACE to pause/unpause simulation \n" \
                  "E to go back to the explorer \n" \
-                 "M to go to the menu (resets moons) \n" \
+                 "M to go to the menu\n" \
                  "A to go back to adding more planets \n"
 
     credit = "© Ewa Hechsman, Laura Żuchowska"

@@ -1,6 +1,11 @@
 # planetbox
 A custom planetary system simulation.
 
+TODO: 
+Ewa - nawigacja między ekranami tak, żeby się przekazywało display size
+    - exe generation 
+Laura - prędkości księzyców i planet zależne od dystansu od Słońca bo teraz zapierdzielają sobie różnie
+
 ## useful links 
 
 Biblioteka python/pygame do symulowania grawitacji:
