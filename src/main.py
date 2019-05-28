@@ -4,7 +4,8 @@
 Created on Mon Apr  1 23:45:27 2019
 haha april fools I suck at this :)
 @author: hushmans
-# TODO: resizable!!
+# TODO: resizability
+# TODO: exception catches
 """
 #pip install thorpy, pygame
 import thorpy
@@ -32,7 +33,7 @@ display_width = 800
 display_height = 600
 ico = pygame.image.load('../imgs/favicon.ico')
 pygame.init()
-DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
+
 
 # global planet variables
 prad=0
@@ -55,24 +56,28 @@ class Background(pygame.sprite.Sprite):
 
 # sky prev handling
 class SkyPrev(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, DISPLAY):
         pygame.draw.rect(DISPLAY, BLACK, (350, 250, 415, 315), 0)
         pygame.draw.rect(DISPLAY, WHITE, (350, 250, 415, 315), 2)
         simulation.drawPlanets(DISPLAY, 415, 315, 200, 250)
+        pygame.display.update()
 
 
-def apploop():
+def apploop(DISPLAY):
+    global display_height, display_width
     #main app loo
     pygame.display.set_caption('Planetbox')
     pygame.display.set_icon(ico)
+
+    display_width, display_height = DISPLAY.get_size()
     DISPLAY.fill(RICHBLUE)
 
     #display background
     Bg = Background('../imgs/bg.jpg', [0, 0])
-    DISPLAY.blit(Bg.image, Bg.rect)
+    DISPLAY.blit(pygame.transform.scale(Bg.image, (display_width, display_height)), Bg.rect)
 
     #display sky preview
-    Skyprev = SkyPrev()
+    Skyprev = SkyPrev(DISPLAY)
 
     #update
     pygame.display.update()
@@ -121,24 +126,33 @@ def apploop():
 
     def read_inserter_func(event):#Reactions functions must take an event as first arg
         global prad, pmass, pname, pdist
-        if(event.el == p_rad):
-            prad = event.el.get_value()
-            prad = int(prad)
-            #print(prad)
-        elif(event.el== p_dist):
-            pdist = event.el.get_value()
-            pdist = float(pdist)
-            #print(pdist)
-        elif(event.el == p_mass):
-            pmass = event.el.get_value()
-            pmass = int(pmass)
-            #print(pmass)
-        elif(event.el == p_name):
-            pname = event.el.get_value()
-            #print(pname)
-        elif(event.el== p_kind):
-            ptype = event.el.get_value()
-            #print(ptype)
+        try:
+            if(event.el == p_rad):
+                prad = event.el.get_value()
+                prad = int(prad)
+            elif(event.el== p_dist):
+                pdist = event.el.get_value()
+                pdist = float(pdist)
+            elif(event.el == p_mass):
+                pmass = event.el.get_value()
+                pmass = int(pmass)
+            elif(event.el == p_name):
+                pname = event.el.get_value()
+            elif(event.el== p_kind):
+                ptype = event.el.get_value()
+        except:  # handling errors
+            AlertBox.AlertBox(1, "valueError")
+            p_rad.set_value("")
+            p_dist.set_value("")
+            p_mass.set_value("")
+            p_rad.unblit_and_reblit()
+            p_dist.unblit_and_reblit()
+            p_mass.unblit_and_reblit()
+
+    def reset_simulation():
+        simulation.Planets = []
+        simulation.PlanetsCord = []
+        SkyPrev(DISPLAY)
 
     # pressing add planet btn reaction
     def readPlanet():
@@ -146,13 +160,13 @@ def apploop():
         ptype = p_kind.get_selected().get_text()
         den_val = density_check(ptype, pmass, prad)
         rad_val = radius_check(prad, ptype)
-        if den_val == 0 or den_val == 1: #wrong density
+        if den_val == 0 or den_val == 1: # wrong density
             AlertBox.AlertBox(den_val, "density")
-        elif rad_val == 0: #radius too small
+        elif rad_val == 0: # radius too small
             AlertBox.AlertBox(rad_val, "radius")
         else:
             print(ptype)
-            #create a new planet
+            # create a new planet
             # clean the inserters
             p_rad.set_value("")
             p_rad.unblit_and_reblit()
@@ -169,7 +183,7 @@ def apploop():
             planet = Planet.Planet(prad, pmass, ptype, pdist, pname)
             simulation.AddPlanet(planet)
             # update preview
-            SkyPrev()
+            SkyPrev(DISPLAY)
 
     def startExplorer():
         print("Starting explorer...")
@@ -198,6 +212,12 @@ def apploop():
     prevBtn.set_size((120, 20))
     prevBtn.set_main_color(RICHBLUE)
     prevBtn.set_font_color(WHITE)
+
+    # reset simulation
+    resBtn = thorpy.make_button("Reset simulation", func=reset_simulation)
+    resBtn.set_size((120, 20))
+    resBtn.set_main_color(RICHBLUE)
+    resBtn.set_font_color(WHITE)
 
     # radius input
     p_rad_txt = thorpy.OneLineText(text="Radius of the planet(km):")
@@ -257,7 +277,7 @@ def apploop():
     # blit thingies
     entries = [p_rad_txt, p_rad, p_mass_txt, p_mass, p_dist_txt, p_dist, p_name_txt, p_name]
     txts = [radio_txt]
-    buttons = [addBtn, prevBtn, startBtn]
+    buttons = [addBtn, prevBtn, startBtn, resBtn]
     elements = entries+txts+radios+buttons
     boxBtn = thorpy.Box.make(elements=elements)
     boxBtn.set_main_color(WHITE)
@@ -283,7 +303,15 @@ def apploop():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.VIDEORESIZE:
+                DISPLAY = pygame.display.set_mode(event.dict['size'], pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
+                DISPLAY.blit(pygame.transform.scale(Bg.image, event.dict['size']), (0, 0))
+                display_width, display_height = event.dict['size']
+                apploop(DISPLAY)
+                pygame.display.flip()
             menu.react(event)
 
 
-if __name__ == '__main__': apploop()
+if __name__ == '__main__':
+    DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
+    apploop(DISPLAY)

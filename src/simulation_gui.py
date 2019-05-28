@@ -1,7 +1,7 @@
 import pygame
 
-from src.Planet import Planet
-from src.Simulation import Simulation
+#from src.Planet import Planet
+#from src.Simulation import Simulation
 
 # define some colors
 WHITE = (255, 255, 255)

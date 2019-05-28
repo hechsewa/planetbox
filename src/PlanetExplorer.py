@@ -1,5 +1,6 @@
 #this takes care of displaying a single planet simulation with moons orbiting the planet
 
+
 from src.Planet import *
 from src.Moon import *
 from src.Simulation import *
@@ -20,6 +21,8 @@ VANILLA = (242, 243, 174)
 display_width = 800
 display_height = 600
 ico = pygame.image.load('../imgs/favicon.ico')
+btnH = 50
+btnW = 150
 
 pygame.init()
 pygame.font.init()  # for text

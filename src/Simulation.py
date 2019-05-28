@@ -1,8 +1,10 @@
 from src.Planet import *
 from src.Moon import *
-from src.menu import *
+from src import menu
+from src import main
 
-# FIXME: resizablity not working properly
+# FIXME: resizablity not working
+# TODO: go from simulation to adding new planets and explorer
 
 # global var for controlling the simulation
 sim = True
@@ -31,6 +33,8 @@ class Simulation:
         pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], 15)
         if len(self.Planets) != 0:
             dist = int(300/len(self.Planets))  # distance between planets
+        else:
+            return
         i = 1
         for p in self.Planets:
             x = i*dist + star_pos_x
@@ -46,7 +50,7 @@ class Simulation:
         pause = False
 
     #pause function
-    def paused(self):
+    def paused(self, screen):
         global pause
 
         while pause:
@@ -59,8 +63,11 @@ class Simulation:
                         self.unpause()
                     #return to menu from pause
                     if event.key == pygame.K_m: #if m then stop and go to menu
-                        self.Planets = [] #reset planets
-                        mainer()
+                        menu.mainer(screen)
+                    if event.key == pygame.K_a: #if a then go to adding planets screen
+                        main.apploop(screen)
+                    if event.key == pygame.K_s:
+                        self.WriteSimToFile()
 
     def orderSystem(self):
         self.Planets.sort(key=lambda x: x.distance)
@@ -90,10 +97,11 @@ class Simulation:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:  # if space pressed then pause
                         pause = True
-                        self.paused()
+                        self.paused(screen)
                     if event.key == pygame.K_m:  # if m then stop and go to menu
-                        self.Planets = []  # reset planets
-                        mainer()
+                        menu.mainer(screen)
+                    if event.key == pygame.K_a: #if a then go to adding planets screen
+                        main.apploop(screen)
                     if event.key == pygame.K_s:
                         self.WriteSimToFile()
 

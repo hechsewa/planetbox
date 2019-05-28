@@ -5,7 +5,11 @@ from src.Planet import *
 from src.Moon import *
 from src.menu import *
 from src.PlanetExplorer import PlanetExplorer
+from src import main
+from src import menu
 # from OpenGL.GL import *
+
+# TODO: zooooooomiiiin
 
 # some imports and globals
 # define display size
@@ -52,7 +56,7 @@ class PlanetAnimation:
 
         # pause function
 
-    def paused(self):
+    def paused(self, DISPLAY):
         global pause
 
         while pause:
@@ -68,7 +72,9 @@ class PlanetAnimation:
                         self.exp.pe_main()
                     if event.key == pygame.K_m:  # if m then stop and go to menu
                         # self.planet.moons = []
-                        mainer()
+                        menu.mainer(DISPLAY)
+                    if event.key == pygame.K_a:
+                        main.apploop(DISPLAY)
 
     def text_object(self, msg, size):
         myfont = pygame.font.SysFont("../imgs/Ubuntu-R.ttf", size)
@@ -93,7 +99,7 @@ class PlanetAnimation:
             y += word_height  # Start on new row.
 
     def printPlanetInfo(self, DISPLAY, w, h):
-        myfont = pygame.font.SysFont("../imgs/Ubuntu-R.ttf", 15)
+        myfont = pygame.font.Font("../imgs/Ubuntu-R.ttf", 15)
         info = self.planet.printPlanet()
         self.multiline_txt(DISPLAY, info, (0.05*w+20, 0.05*h+20), myfont)
         pygame.display.update()
@@ -141,12 +147,14 @@ class PlanetAnimation:
                     #    glTranslatef(0.0, 0.0, -1.0)
                     if event.key == pygame.K_SPACE:  # if space pressed then pause
                         pause = True
-                        self.paused()
+                        self.paused(screen)
                     if event.key == pygame.K_e:  # back to explorer
                         self.exp.pe_main()
                     if event.key == pygame.K_m:  # if m then stop and go to menu
                         self.planet.moons = []  # reset moons
-                        mainer()
+                        menu.mainer(screen)
+                    if event.key == pygame.K_a:
+                        main.apploop(screen)
 
             screen.fill(RICHBLUE)
 

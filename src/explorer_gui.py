@@ -18,7 +18,7 @@ pygame.init()
 
 # open seprate window for simulation, init pygame
 def create(planetani, simulation):
-    global ico
+    global ico, display_height, display_width
     pygame.display.set_caption('Planetbox')
     pygame.display.set_icon(ico)
     DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)

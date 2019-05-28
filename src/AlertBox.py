@@ -26,6 +26,10 @@ class AlertBox:
                 text_rad = "Radius of the planet is too small for that type of planet. "\
                            "\n Please change the type of planet or planet's attributes."
                 label = tk.Label(alert, text=text_rad, font=FONT, fg=WHITE)
+        elif(type == "valueError"):
+            text_err = "Please insert only numeric (int or float) values" \
+                        "\n for planet's radius, distance and mass."
+            label = tk.Label(alert, text=text_err, font=FONT, fg=WHITE)
 
         label['background'] = RICHBLUE
         label.pack(side="top", fill="x", pady=10)
