@@ -90,7 +90,7 @@ class Planet:
             self.drawn = pygame.draw.circle(screen, GAS, [x, y], size)
 
     def animate(self, screen, star_x, star_y, h):
-        self.degree += self.gravity
+        self.degree += 12/self.year
         if self.degree == 360:
             self.degree = 0
 

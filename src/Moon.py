@@ -21,7 +21,7 @@ class Moon:
         #TODO sprawdzaj tez z predkoscia minimalna (v=pierwiatek 3. stopnia z (G * M(centralny)/R)
         self.gravity = motherPlanet.GravityCalculator(self.mass)
         self.degree = 0  # for animation purposes
-
+        self.day = math.sqrt(4*math.pi*(self.distance*self.distance*self.distance)/6.67)
 
     # TODO: !! ! ! !
     def GenerateDistance(self):
@@ -44,7 +44,7 @@ class Moon:
         pygame.draw.circle(screen, WHITE, [x, y], dist, 1)
 
     def animate(self, screen, planet_x, planet_y, h):
-        self.degree += self.gravity*10  # change speed according to gravity
+        self.degree += 1/self.day # change speed according to gravity
         if self.degree == 360:
             self.degree = 0
 
