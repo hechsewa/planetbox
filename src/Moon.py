@@ -30,30 +30,30 @@ class Moon:
         return dist
 
     # drawing functions
-    def drawMoon(self, screen, x, y):
+    def drawMoon(self, screen, x, y, scale):
         # moon size (w/ resize)
         w, h = pygame.display.get_surface().get_size()
-        size = int(self.radius*(0.01*h))
+        size = int(self.radius*(0.01*h)*scale)
 
-        pygame.draw.circle(screen, GREY, [x, y], 3)
+        pygame.draw.circle(screen, GREY, [x, y], size)  # previously 3
 
-    def drawOrbit(self, screen, x, y):
+    def drawOrbit(self, screen, x, y, scale):
         # moon distance from planet, draw orbit
         w, h = pygame.display.get_surface().get_size()
-        dist = int(self.distance * (h / 3))
+        dist = int(self.distance * (h / 3)*scale)
         pygame.draw.circle(screen, WHITE, [x, y], dist, 1)
 
-    def animate(self, screen, planet_x, planet_y, h):
-        self.degree += 1/self.day # change speed according to gravity
+    def animate(self, screen, planet_x, planet_y, h, scale):
+        self.degree += 1/self.day  # change speed according to gravity
         if self.degree == 360:
             self.degree = 0
 
-        dist = int(self.distance * (h / 3))
+        dist = int(self.distance * (h / 3)*scale)
         x = int(math.cos(self.degree * 2 * math.pi / 360) * dist) + planet_x
         y = int(math.sin(self.degree * 2 * math.pi / 360) * dist) + planet_y
 
         # self.drawOrbit(screen, planet_x, planet_y)
-        self.drawMoon(screen, x, y)
+        self.drawMoon(screen, x, y, scale)
         pygame.display.flip()
 
     # for printing to file

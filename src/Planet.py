@@ -56,13 +56,15 @@ class Planet:
 
 
     #draw planet on simulation
-    def drawPlanet(self, screen, x, y):
+    def drawPlanet(self, screen, x, y, scale):
         self.cords = []
 
         #planet size (w/ resize)
         w, h = pygame.display.get_surface().get_size()
-        size = int(self.radius/1000)
-        #print("Planet size: " + str(size))
+        size = int(self.radius/1000)*scale
+        size = int(size)
+        x = int(x)
+        y = int(y)
 
         self.cords.append(x)
         self.cords.append(y)
@@ -77,11 +79,11 @@ class Planet:
 
         return
 
-    def drawBigPlanet(self, screen, size):
+    def drawBigPlanet(self, screen, size, scale):
         w, h = pygame.display.get_surface().get_size()
         x = int(w/2)
         y = int(h/2)
-        size = int(self.radius / 1000)
+        size = int(self.radius / 1000 * scale)
         if self.type == "terrestrial":
             self.drawn = pygame.draw.circle(screen, TER, [x, y], size)
         elif self.type == "ice":

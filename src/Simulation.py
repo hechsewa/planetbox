@@ -23,16 +23,16 @@ class Simulation:
         self.PlanetsCord.append((x, y, rad))
 
     # draws static planets (for preview)
-    def drawPlanets(self, screen, w, h, xs, ys):
+    def drawPlanets(self, screen, w, h, xs, ys, scale):
         self.orderSystem()
         self.PlanetsCord = []
         #x, y point to where in starts, usually (0,0) but preview :<
         star_pos_x = xs + int(w / 2)
         star_pos_y = ys + int(h / 2)
         # display main star
-        pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], 15)
+        pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], int(15*scale))
         if len(self.Planets) != 0:
-            dist = int(300/len(self.Planets))  # distance between planets
+            dist = int(300/len(self.Planets))*scale  # distance between planets
         else:
             return
         i = 1
@@ -40,7 +40,7 @@ class Simulation:
             x = i*dist + star_pos_x
             i = i + 1
             y = star_pos_y
-            p.drawPlanet(screen, x, y)
+            p.drawPlanet(screen, x, y, scale)
             self.calcPlanetCord(x, y, p, h)
             pygame.display.update()
 

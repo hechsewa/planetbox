@@ -39,13 +39,22 @@ class PlanetExplorer:
         return textsurface
 
     # explorer logic
-    def pe_events(self, DISPLAY, w, h):
+    def pe_events(self, DISPLAY, w, h, scale):
         DISPLAY.fill(RICHBLUE)
-        self.sim.drawPlanets(DISPLAY, w, h, 0, 0)
+        self.sim.drawPlanets(DISPLAY, w, h, 0, 0, scale)
         pygame.display.update()
         msg = "Click on the planet to explore it and its moons."
         textSurf = self.text_object(msg, 20)
         DISPLAY.blit(textSurf, (0.05*w, 0.05*h))
+        pygame.display.update()
+
+    def check_scale(self, scale):
+        new_scale = scale
+        if scale <= 0:
+            new_scale = 0
+        elif scale >= 50:
+            new_scale = 50
+        return new_scale
 
     # main app loop
     def pe_main(self):
@@ -57,11 +66,13 @@ class PlanetExplorer:
         DISPLAY.fill(RICHBLUE)
         pygame.display.update()
 
-        self.pe_events(DISPLAY, display_width, display_height)
+        scale = 1
+        self.pe_events(DISPLAY, display_width, display_height, scale)
         pygame.display.flip()
 
         # main loop
         while True:
+
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -70,8 +81,23 @@ class PlanetExplorer:
                     DISPLAY = pygame.display.set_mode(event.dict['size'],
                                                       pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
                     DISPLAY.fill(RICHBLUE)
-                    self.pe_events(DISPLAY, event.dict['w'], event.dict['h'])
+                    self.pe_events(DISPLAY, event.dict['w'], event.dict['h'], scale)
                     pygame.display.update()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == K_UP:
+                        scale += 0.1
+                        scale = self.check_scale(scale)
+                        DISPLAY.fill(RICHBLUE)
+                        self.pe_events(DISPLAY, display_width, display_height, scale)
+                    if event.key == K_DOWN:
+                        scale -= 0.1
+                        scale = self.check_scale(scale)
+                        DISPLAY.fill(RICHBLUE)
+                        self.pe_events(DISPLAY, display_width, display_height, scale)
+                    if event.key == K_r:
+                        scale = 1
+                        DISPLAY.fill(RICHBLUE)
+                        self.pe_events(DISPLAY, display_width, display_height, scale)
 
                 # hovering and clicking on the planet
             for p in self.sim.Planets:
@@ -93,9 +119,8 @@ class PlanetExplorer:
                     else:
                         #p.drawPlanet(DISPLAY, x, y)
                         w, h = pygame.display.get_surface().get_size()
-                        self.pe_events(DISPLAY, w, h)
+                        self.pe_events(DISPLAY, w, h, 1)
                         pygame.display.update()
 
             clock.tick(15)
-
 

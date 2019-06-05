@@ -25,7 +25,7 @@ def create(planetani, simulation):
     DISPLAY.fill(RICHBLUE)
 
     planetani.setSimulation(simulation)
-    planetani.animateMoons(DISPLAY, display_width, display_height)
+    planetani.animateMoons(DISPLAY, display_width, display_height, 1)
 
     while True:
         for event in pygame.event.get():
@@ -35,7 +35,8 @@ def create(planetani, simulation):
             if event.type == pygame.VIDEORESIZE:
                 DISPLAY = pygame.display.set_mode(event.dict['size'], pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
                 DISPLAY.fill(RICHBLUE)
-                planetani.animateMoons(DISPLAY, event.dict['w'], event.dict['h'])
+                scale = 1
+                planetani.animateMoons(DISPLAY, event.dict['w'], event.dict['h'], scale)
 
 
 if __name__ == '__main__': create()

@@ -104,24 +104,42 @@ class PlanetAnimation:
         self.multiline_txt(DISPLAY, info, (0.05*w+20, 0.05*h+20), myfont)
         pygame.display.update()
 
-    def planet_events(self, DISPLAY, w, h, x, y):
+    def planet_events(self, DISPLAY, w, h, x, y, scale):
         #DISPLAY.fill(RICHBLUE)
-        self.planet.drawBigPlanet(DISPLAY, int(h*0.1))
+        self.planet.drawBigPlanet(DISPLAY, int(h*0.1), scale)
 
         maintxt = "Planet Information"
         textSurf = self.text_object(maintxt, 20)
         DISPLAY.blit(textSurf, (0.05 * w, 0.05 * h))
 
         for m in self.planet.moons:
-            m.drawOrbit(DISPLAY, x, y)
+            m.drawOrbit(DISPLAY, x, y, scale)
 
         self.printPlanetInfo(DISPLAY, w, h)
         #pygame.display.update()
 
-    # animates the moons
-    def animateMoons(self, screen, w, h):
+    def planet_anim(self, screen, w, h, x, y, scale):
+        self.planet_events(screen, w, h, x, y, scale)
+        for m in self.planet.moons:
+            m.animate(screen, x, y, h, scale)
 
+    def check_scale(self, scale):
+        new_scale = scale
+        if scale <= 0.2:
+            new_scale = 0.2
+        elif scale >= 50:
+            new_scale = 50
+        return new_scale
+
+    # animates the moons
+    def animateMoons(self, screen, w, h, scale):
         global sim, pause
+        screen = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
+        pygame.display.set_caption('Planetbox')
+        pygame.display.set_icon(ico)
+        screen.fill(RICHBLUE)
+        pygame.display.update()
+
         planet_pos_x = int(w / 2)
         planet_pos_y = int(h / 2)
         clock = pygame.time.Clock()
@@ -138,30 +156,38 @@ class PlanetAnimation:
                     #glTranslatef(0.0, 0.0, -5.0)  # moving back
                     screen.fill(RICHBLUE)
                     sim = False
-                    self.animateMoons(screen, event.dict['w'], event.dict['h'])
+                    scale = 1
+                    self.animateMoons(screen, event.dict['w'], event.dict['h'], scale)
                 # KEY EVENTS
                 if event.type == pygame.KEYDOWN:
-                  #  if event.key == pygame.K_z:
-                   #     glTranslatef(0.0, 0.0, 1.0)
-                   # if event.key == pygame.K_z:
-                    #    glTranslatef(0.0, 0.0, -1.0)
                     if event.key == pygame.K_SPACE:  # if space pressed then pause
                         pause = True
                         self.paused(screen)
                     if event.key == pygame.K_e:  # back to explorer
                         self.exp.pe_main()
                     if event.key == pygame.K_m:  # if m then stop and go to menu
-                        self.planet.moons = []  # reset moons
                         menu.mainer(screen)
                     if event.key == pygame.K_a:
                         main.apploop(screen)
+                    if event.key == pygame.K_r:  # resets zoom
+                        scale = 1
+                        screen.fill(RICHBLUE)
+                        self.animateMoons(screen, display_width, display_height, scale)
+                    if event.key == pygame.K_UP:  # zoom up
+                        scale += 0.1
+                        scale = self.check_scale(scale)
+                        screen.fill(RICHBLUE)
+                        self.animateMoons(screen, display_width, display_height, scale)
+                    if event.key == pygame.K_DOWN:  # zoom down
+                        scale -= 0.1
+                        scale = self.check_scale(scale)
+                        screen.fill(RICHBLUE)
+                        self.animateMoons(screen, display_width, display_height, scale)
 
             screen.fill(RICHBLUE)
 
             # draw the planet and the planet's info
-            self.planet_events(screen, w, h, planet_pos_x, planet_pos_y)
-            for m in self.planet.moons:
-                m.animate(screen, planet_pos_x, planet_pos_y, h)
+            self.planet_anim(screen, w, h, planet_pos_x, planet_pos_y, scale)
 
             pygame.display.flip()
             clock.tick(100)
