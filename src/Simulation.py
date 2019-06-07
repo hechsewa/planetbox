@@ -10,6 +10,8 @@ from src import main
 sim = True
 pause = False
 
+ico = pygame.image.load('../imgs/favicon.ico')
+pygame.init()
 
 class Simulation:
 
@@ -73,9 +75,22 @@ class Simulation:
         self.Planets.sort(key=lambda x: x.distance)
 
 
+    def check_scale(self, scale):
+        new_scale = scale
+        if scale <= 0.2:
+            new_scale = 0.2
+        elif scale >= 50:
+            new_scale = 50
+        return new_scale
+
     # animates the planets
-    def animatePlanets(self, screen, w, h):
-        global sim, pause
+    def animatePlanets(self, screen, w, h, scale):
+        global sim, pause, ico
+        pygame.display.set_caption('Planetbox')
+        pygame.display.set_icon(ico)
+        screen = pygame.display.set_mode((w, h), pygame.RESIZABLE)
+        screen.fill(RICHBLUE)
+
         star_pos_x = int(w / 2)
         star_pos_y = int(h / 2)
         clock = pygame.time.Clock()
@@ -92,7 +107,7 @@ class Simulation:
                                                      pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
                     screen.fill(RICHBLUE)
                     sim = False
-                    self.animatePlanets(screen, event.dict['w'], event.dict['h'])
+                    self.animatePlanets(screen, event.dict['w'], event.dict['h'], scale)
                 # KEY EVENTS
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:  # if space pressed then pause
@@ -104,12 +119,23 @@ class Simulation:
                         main.apploop(screen)
                     if event.key == pygame.K_s:
                         self.WriteSimToFile()
+                    if event.key == pygame.K_UP:
+                        scale += 0.1
+                        scale = self.check_scale(scale)
+                        self.animatePlanets(screen, w, h, scale)
+                    if event.key == pygame.K_DOWN:
+                        scale -= 0.1
+                        scale = self.check_scale(scale)
+                        self.animatePlanets(screen, w, h, scale)
+                    if event.key == pygame.K_r:
+                        scale = 1
+                        self.animatePlanets(screen, w, h, scale)
 
             screen.fill(RICHBLUE)
 
-            pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], 15)
+            pygame.draw.circle(screen, WHITE, [star_pos_x, star_pos_y], int(15*scale))
             for p in self.Planets:
-                p.animate(screen, star_pos_x, star_pos_y, h)
+                p.animate(screen, star_pos_x, star_pos_y, h, scale)
 
             pygame.display.flip()
             clock.tick(10)

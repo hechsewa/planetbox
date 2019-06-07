@@ -48,10 +48,10 @@ class Planet:
 
 
     #for drawing purposes
-    def drawOrbit(self, screen, x, y):
+    def drawOrbit(self, screen, x, y, scale):
         # planet distance from sun, draw orbit
         w, h = pygame.display.get_surface().get_size()
-        dist = int(self.distance * (h / 3))
+        dist = int(self.distance * (h / 3)*scale)
         pygame.draw.circle(screen, WHITE, [x, y], dist, 1)
 
 
@@ -91,17 +91,17 @@ class Planet:
         elif self.type == "gas":
             self.drawn = pygame.draw.circle(screen, GAS, [x, y], size)
 
-    def animate(self, screen, star_x, star_y, h):
+    def animate(self, screen, star_x, star_y, h, scale):
         self.degree += 12/self.year
         if self.degree == 360:
             self.degree = 0
 
-        dist = int(self.distance * (h / 3))
+        dist = int(self.distance * (h / 3)*scale)
         x = int(math.cos(self.degree * 2 * math.pi / 360) * dist) + star_x
         y = int(math.sin(self.degree * 2 * math.pi / 360) * dist) + star_y
 
-        self.drawOrbit(screen, star_x, star_y)
-        self.drawPlanet(screen, x, y)
+        self.drawOrbit(screen, star_x, star_y, scale)
+        self.drawPlanet(screen, x, y, scale)
         pygame.display.flip()
 
     # for printing to file

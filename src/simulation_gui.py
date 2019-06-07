@@ -23,7 +23,7 @@ def create(simulation):
     DISPLAY = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
     DISPLAY.fill(RICHBLUE)
 
-    simulation.animatePlanets(DISPLAY, display_width, display_height)
+    simulation.animatePlanets(DISPLAY, display_width, display_height, 1)
 
     while True:
         for event in pygame.event.get():
@@ -33,7 +33,7 @@ def create(simulation):
             if event.type == pygame.VIDEORESIZE:
                 DISPLAY = pygame.display.set_mode(event.dict['size'], pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
                 DISPLAY.fill(RICHBLUE)
-                simulation.animatePlanets(DISPLAY, event.dict['w'], event.dict['h'])
+                simulation.animatePlanets(DISPLAY, event.dict['w'], event.dict['h'], 1)
 
 
 if __name__ == '__main__' : create()
