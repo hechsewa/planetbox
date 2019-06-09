@@ -165,7 +165,7 @@ def apploop(DISPLAY):
         elif rad_val == 0: # radius too small
             AlertBox.AlertBox(rad_val, "radius")
         else:
-            print(ptype)
+            #print(ptype)
             # create a new planet
             # clean the inserters
             p_rad.set_value("")
@@ -186,12 +186,12 @@ def apploop(DISPLAY):
             SkyPrev(DISPLAY)
 
     def startExplorer():
-        print("Starting explorer...")
+        #print("Starting explorer...")
         planetExp.pe_main()
 
     def startSimulation():
         #simulation.CreateMoons()
-        print("Starting simulation...")
+        #print("Starting simulation...")
         print(simulation.PrintPlanets())
         simulation_gui.create(simulation)
 

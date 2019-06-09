@@ -134,7 +134,7 @@ class PlanetAnimation:
     # animates the moons
     def animateMoons(self, screen, w, h, scale):
         global sim, pause
-        screen = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
+        #screen = pygame.display.set_mode((display_width, display_height), pygame.RESIZABLE)
         pygame.display.set_caption('Planetbox')
         pygame.display.set_icon(ico)
         screen.fill(RICHBLUE)
@@ -153,7 +153,6 @@ class PlanetAnimation:
                 if event.type == pygame.VIDEORESIZE:
                     screen = pygame.display.set_mode(event.dict['size'],
                                                      pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
-                    #glTranslatef(0.0, 0.0, -5.0)  # moving back
                     screen.fill(RICHBLUE)
                     sim = False
                     scale = 1

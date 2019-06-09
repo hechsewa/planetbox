@@ -110,8 +110,7 @@ def mainer(DISPLAY):
                 pygame.display.flip()
                 display_width = event.dict['w']
                 display_height = event.dict['h']
-                blit_logo(DISPLAY, display_width, 50)
-                blit_menu(DISPLAY, display_width, display_height)
+                mainer(DISPLAY)
                 pygame.display.update()
 
             btn_w = display_width // 2 - btnW // 2

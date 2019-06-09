@@ -77,7 +77,8 @@ def blit_all_info(DISPLAY, display_width, display_height):
     instr_exp2 = "SPACE to pause/unpause simulation \n" \
                  "E to go back to the explorer \n" \
                  "M to go to the menu\n" \
-                 "A to go back to adding more planets \n"
+                 "A to go back to adding more planets \n \n" \
+                 "UP to zoom in, DOWN to zoom out \n"
 
     credit = "© Ewa Hechsman, Laura Żuchowska"
 
@@ -86,7 +87,7 @@ def blit_all_info(DISPLAY, display_width, display_height):
     bold = pygame.font.Font("../imgs/Ubuntu-B.ttf", 14)
 
     btn_pos_w = display_width//2 - btnW//2
-    btn_pos_h = 0.77*display_height
+    btn_pos_h = 0.8*display_height
 
     blit_logo(DISPLAY, display_width, 0.1*display_height)
     multiline_centered_txt(DISPLAY, instr, regular, 14, 0.3*display_height)
@@ -141,7 +142,7 @@ def main_loop(DISPLAY):
                         menu.mainer(DISPLAY)
 
         btn_pos_w = display_width // 2 - btnW // 2
-        btn_pos_h = 0.77 * display_height
+        btn_pos_h = 0.8 * display_height
         button("BACK TO MENU", btn_pos_w, btn_pos_h, btnW, btnH, DISPLAY)
         pygame.display.flip()
         clock.tick(20)
