@@ -1,24 +1,56 @@
-# planetbox
+# Planetbox
+
+![planetbox logo](https://github.com/hechsewa/planetbox/blob/exec/imgs/logo150jpg.jpg) 
+
 A custom planetary system simulation.
 
-TODO: 
-Ewa - nawigacja między ekranami tak, żeby się przekazywało display size
-    - exe generation 
-Laura - prędkości księzyców i planet zależne od dystansu od Słońca bo teraz zapierdzielają sobie różnie
+Planetbox is a simple, custom planetary system simulation.
+It can simulate a whole planetary system and single planets and it's moons.
+Planetbox allows you to add your own planets to the simulation, lets you name them and checks if the parameters are correct for the chosen type of a planet.
 
-## useful links 
+GUI Simulation is purely demonstrative, accurate equations and calculations are available in a 'Statistics.txt' file after pressing 'S' in a simulation window. 
 
-Biblioteka python/pygame do symulowania grawitacji:
-https://www.thanassis.space/gravity.html
+## Set up the program ##
 
-Biblioteka do python do symulowania różnych zjawisk fizycznych (mostly 3D):
-https://www.glowscript.org/#/user/GlowScriptDemos/folder/Examples/program/BinaryStar-VPython
+### Linux ### 
 
-Efemerydy:
-https://pl.wikipedia.org/wiki/Efemerydy_(astronomia)
+Install libraries used in the projects:
+```
+pip install thorpy
+pip install pygame
+pip install tkinter
+pip install math
+```
 
-AstronomyAPI:
-http://astronomyapi.org/
+Clone *master* branch.
 
-Numeryczny model/opis zjawisk astronomicznych/zależności:
-https://en.wikipedia.org/wiki/Numerical_model_of_the_Solar_System
+Run the program from the *src* folder:
+```
+python menu.py
+```
+
+
+### Windows ###
+
+Executable version for Windows can be found on a branch *exec*. 
+Pull branch *exec*. Go into *src/build/exec/exe.win-amd64-3.7/Planetbox.exe*. 
+
+## Instructions ## 
+
+* SPACE to pause/unpause simulation
+* E to go back to the explorer 
+* M to go to the menu
+* A to go back to adding more planets 
+* UP to zoom in
+* DOWN to zoom out
+* S to save information about your planetary system to a file containing all the calculations (simulation window)
+
+## Screenshots ## 
+
+![adding planets](https://github.com/hechsewa/planetbox/blob/exec/imgs/add.jpg) 
+![simulation](https://github.com/hechsewa/planetbox/blob/exec/imgs/sim.jpg) 
+![planet explorer](https://github.com/hechsewa/planetbox/blob/exec/imgs/expl.jpg) 
+![planet animation](https://github.com/hechsewa/planetbox/blob/exec/imgs/planet.jpg) 
+
+### Credits ### 
+© Ewa Hechsman, Laura Żuchowska
